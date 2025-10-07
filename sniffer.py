@@ -75,8 +75,9 @@ def quat_to_euler_degrees(qw, qx, qy, qz):
 
 IP = "0.0.0.0"
 UDP_PORT = 4000
-CAPTURE_FILE = "osc_capture.pcap"
-CSV_FILE = "osc_capture.csv"
+# CHANGE THESE NOT TO OVERWRITE
+CAPTURE_FILE = "osc_capture3.pcap"
+CSV_FILE = "osc_capture3.csv"
 packet_buffer = []
 capture_lock = threading.Lock()
 csv_lock = threading.Lock()
@@ -125,7 +126,8 @@ def init_csv():
     with csv_lock:
         with open(CSV_FILE, "w", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(["acclx", "accly", "acclz"])
+            # writer.writerow(["acclx", "accly", "acclz"])
+            writer.writerow([CSV_FILE])
 
 def log_csv(data):
     with csv_lock:
@@ -175,8 +177,9 @@ def live_plot():
     ax_accel.set_title("Acceleration")
     ax_gyro.set_title("Gyroscope")
     ax_mag.set_title("Magnetometer")
+    ax_orient.set_title("Rotation")
 
-    for ax in (ax_accel, ax_gyro, ax_mag):
+    for ax in (ax_accel, ax_gyro, ax_mag, ax_orient):
         ax.grid(True, alpha=0.3)
         ax.legend(loc="upper right")
 
