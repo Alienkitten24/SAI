@@ -6,6 +6,72 @@ from scapy.all import sniff, wrpcap
 from pythonosc import dispatcher, osc_server
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from collections import deque
+
+class osc_data:
+    def __init__(self, addr, args):
+        self.addr = addr
+        self.ax = args[0]
+        self.ay = args[1]
+        self.az = args[2]
+        self.ex = args[3]
+        self.ey = args[4]
+        self.ez = args[5]
+        self.gx = args[6]
+        self.gy = args[7]
+        self.gz = args[8]
+        self.mx = args[9]
+        self.my = args[10]
+        self.mz = args[11]
+        self.qw = args[12]
+        self.qx = args[13]
+        self.qy = args[14]
+        self.qz = args[15]
+        # args[16] aka datagram17 is undocumented
+        self.battery = args[17]
+        self.sys_status = args[18]
+        self.gyro_status = args[19]
+        self.accl_status = args[20]
+        self.mag_status = args[21]
+        self.seconds = args[22]
+        self.seqnum = args[23]
+
+
+def quat_to_euler_degrees(qw, qx, qy, qz):
+    """
+    Convert quaternion (qw, qx, qy, qz) to Euler angles (roll, pitch, yaw) in degrees.
+    Uses the convention: roll around X, pitch around Y, yaw around Z (Tait-Bryan ZYX).
+    """
+    # Normalize quaternion to avoid errors
+    import math
+    norm = math.sqrt(qw*qw + qx*qx + qy*qy + qz*qz)
+    if norm == 0:
+        return 0.0, 0.0, 0.0
+    qw /= norm
+    qx /= norm
+    qy /= norm
+    qz /= norm
+
+    # roll (x-axis rotation)
+    sinr_cosp = 2 * (qw * qx + qy * qz)
+    cosr_cosp = 1 - 2 * (qx * qx + qy * qy)
+    roll = math.atan2(sinr_cosp, cosr_cosp)
+
+    # pitch (y-axis rotation)
+    sinp = 2 * (qw * qy - qz * qx)
+    if abs(sinp) >= 1:
+        pitch = math.copysign(math.pi / 2, sinp)  # use 90 degrees if out of range
+    else:
+        pitch = math.asin(sinp)
+
+    # yaw (z-axis rotation)
+    siny_cosp = 2 * (qw * qz + qx * qy)
+    cosy_cosp = 1 - 2 * (qy * qy + qz * qz)
+    yaw = math.atan2(siny_cosp, cosy_cosp)
+
+    # convert to degrees
+    return (math.degrees(roll), math.degrees(pitch), math.degrees(yaw))
+
 
 IP = "0.0.0.0"
 UDP_PORT = 4000
@@ -23,9 +89,10 @@ def osc_handler(address, *args):
     # print(f"OSC: {address} {args}")
     # push data for plotting
     if args and isinstance(args[0], (int, float)):
-        data_queue.put((address, args[0], args[1], args[2]))
+        d = osc_data(address, args)
+        data_queue.put(d)
         # LOG TO CSV HERE FOR SOME REASON
-        log_csv(args[0], args[1], args[2])
+        log_csv(d)
 
 def start_osc_server():
     disp = dispatcher.Dispatcher()
@@ -60,63 +127,135 @@ def init_csv():
             writer = csv.writer(f)
             writer.writerow(["acclx", "accly", "acclz"])
 
-def log_csv(acclx, accly, acclz):
+def log_csv(data):
     with csv_lock:
         with open(CSV_FILE, "a", newline="") as f:
             writer = csv.writer(f)
-            row = [acclx, accly, acclz]
+            row = list(data.__dict__.values()) #convert to list
             writer.writerow(row)
 
 # --- Live plotting ---
 def live_plot():
     plt.style.use("dark_background")
-    fig, ax = plt.subplots()
-    ax.set_title("Live OSC Data")
-    ax.set_xlabel("Time (s)")
-    ax.set_ylabel("Value")
 
-    # Fixed Y-axis range (adjust as needed)
-    ax.set_ylim(-5, 5)
+    # Four stacked subplots: Accel, Gyro, Mag, Orientation
+    fig, axes = plt.subplots(4, 1, sharex=True, figsize=(10, 10))
+    ax_accel, ax_gyro, ax_mag, ax_orient = axes
 
-    lines = []
-    xdata = []
-    yseries = []
+    history = 300  # number of samples to keep
     colors = ["r", "g", "b"]
 
-    # Store time series per OSC address
-    data_dict = {}  # {address: (xdata, ydata, line)}
+    # Deques for time and each axis for each sensor
+    times = deque(maxlen=history)
+
+    aX = deque(maxlen=history)
+    aY = deque(maxlen=history)
+    aZ = deque(maxlen=history)
+
+    gX = deque(maxlen=history)
+    gY = deque(maxlen=history)
+    gZ = deque(maxlen=history)
+
+    mX = deque(maxlen=history)
+    mY = deque(maxlen=history)
+    mZ = deque(maxlen=history)
+
+    # Orientation deques (roll, pitch, yaw in degrees)
+    r = deque(maxlen=history)
+    p = deque(maxlen=history)
+    y = deque(maxlen=history)
+
+    # Create line objects
+    a_lines = [ax_accel.plot([], [], color=colors[i], label=f"A{axis}")[0] for i, axis in enumerate(["X", "Y", "Z"])]
+    g_lines = [ax_gyro.plot([], [], color=colors[i], label=f"G{axis}")[0] for i, axis in enumerate(["X", "Y", "Z"])]
+    m_lines = [ax_mag.plot([], [], color=colors[i], label=f"M{axis}")[0] for i, axis in enumerate(["X", "Y", "Z"])]
+    o_lines = [ax_orient.plot([], [], color=colors[i], label=l)[0] for i, l in enumerate(["Roll", "Pitch", "Yaw"])]
+
+    # Configure axes
+    ax_accel.set_title("Acceleration")
+    ax_gyro.set_title("Gyroscope")
+    ax_mag.set_title("Magnetometer")
+
+    for ax in (ax_accel, ax_gyro, ax_mag):
+        ax.grid(True, alpha=0.3)
+        ax.legend(loc="upper right")
+
+    ax_accel.set_ylabel("m/s^2 or raw")
+    ax_gyro.set_ylabel("deg/s or raw")
+    ax_mag.set_ylabel("uT or raw")
+    ax_mag.set_xlabel("time (s)")
+    ax_orient.set_xlabel("time (s)")
 
     def update(frame):
-        current_time = time.time() - start_time
-        # Process all new data in the queue
+        updated = False
+        # drain queue
         while not data_queue.empty():
-            address, acclx, accly, acclz = data_queue.get()
-            if not lines:
-                for i in range(3):
-                    (line,) = ax.plot([],[],colors[i%3],label=f"val[{i}]")
-                    lines.append(line)
-                    yseries.append([])
-                ax.legend(loc="upper right")
-            xdata.append(current_time)
-            yseries[0].append(acclx)
-            yseries[1].append(accly)
-            yseries[2].append(acclz)
-            if len(xdata) > 300:
-                xdata.pop(0)
-                yseries[0].pop(0)
-                yseries[1].pop(0)
-                yseries[2].pop(0)
+            d = data_queue.get()
+            t = time.time() - start_time
+            times.append(t)
 
-        for i, line in enumerate(lines):    
-            line.set_data(xdata, yseries[i])
+            aX.append(d.ax)
+            aY.append(d.ay)
+            aZ.append(d.az)
 
-        # Rescale x-axis only
-        if xdata:
-            ax.set_xlim(xdata[0], xdata[-1]+1)
+            gX.append(d.gx)
+            gY.append(d.gy)
+            gZ.append(d.gz)
 
-        return lines
+            mX.append(d.mx)
+            mY.append(d.my)
+            mZ.append(d.mz)
 
-    ani = animation.FuncAnimation(fig, update, interval=100)
+            # compute roll/pitch/yaw from quaternion fields
+            roll, pitch, yawv = quat_to_euler_degrees(d.qw, d.qx, d.qy, d.qz)
+            r.append(roll)
+            p.append(pitch)
+            y.append(yawv)
+
+            updated = True
+
+        if not times:
+            return a_lines + g_lines + m_lines
+
+        # update line data
+        for line, seq in zip(a_lines, (aX, aY, aZ)):
+            line.set_data(times, seq)
+        for line, seq in zip(g_lines, (gX, gY, gZ)):
+            line.set_data(times, seq)
+        for line, seq in zip(m_lines, (mX, mY, mZ)):
+            line.set_data(times, seq)
+        for line, seq in zip(o_lines, (r, p, y)):
+            line.set_data(times, seq)
+
+        # Adjust x-limits
+        xmin, xmax = times[0], times[-1]
+        for ax in (ax_accel, ax_gyro, ax_mag):
+            ax.set_xlim(xmin, xmax + 0.001)
+
+        # Optional: autoscale y per subplot with some padding
+        def autoscale(ax, sequences, pad=0.1):
+            all_vals = []
+            for s in sequences:
+                if s:
+                    all_vals.extend(s)
+            if not all_vals:
+                return
+            mn, mx = min(all_vals), max(all_vals)
+            if mn == mx:
+                mn -= 0.5
+                mx += 0.5
+            rng = mx - mn
+            ax.set_ylim(mn - rng * pad, mx + rng * pad)
+
+        autoscale(ax_accel, (aX, aY, aZ))
+        autoscale(ax_gyro, (gX, gY, gZ))
+        autoscale(ax_mag, (mX, mY, mZ))
+        autoscale(ax_orient, (r, p, y))
+
+        return a_lines + g_lines + m_lines
+
+    ani = animation.FuncAnimation(fig, update, interval=100, blit=False)
+    plt.tight_layout()
     plt.show()
 
 # --- Run all ---
