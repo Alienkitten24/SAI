@@ -1,0 +1,17 @@
+ok idk how much of this is necessary and which parts actually work but 
+also power cycle client and server
+
+server (pi):
+1. sudo systemctl stop bluetooth
+2. sudo rfkill block bluetooth
+3. sudo rfkill unblock bluetooth
+4. sudo systemctl start bluetooth
+5. bluetoothctl list, should show e4:5f
+6. bluetoothctl paired-devices, remove laptop
+7. use sudo bluetoothctl scan on to monitor
+
+client (windows): 
+1. settings -> remove devices
+2. registry Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\BTHPORT\Parameters\Devices\, delete folder of device
+3. settings -> bluetooth off and on
+4. build

@@ -1,0 +1,9 @@
+how to build simpleble
+basically follow this: https://simpleble.readthedocs.io/en/latest/simpleble/usage.html
+
+0. make sure you have windows sdk bc simpleble depends on it
+1. clone github repo https://github.com/simpleble/simpleble/blob/main/examples/simpleble/ make sure you have the c++ editions
+2. build:   cmake -S <path-to-simpleble> -B build_simpleble
+            cmake --build build_simpleble -j7
+3. make sure your admin then install: cmake --install build_simpleble
+4. update cmakelists to include the right stuff
