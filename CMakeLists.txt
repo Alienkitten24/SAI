@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(test VERSION 0.0.1)
 
+
 set(JUCE_PATH "C:/JUCE")  # your JUCE path
 add_subdirectory(${JUCE_PATH} JUCE)
 
@@ -22,7 +23,15 @@ target_sources(test PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginProcessor.h
     Source/PluginEditor.cpp
-    Source/PluginEditor.h)
+    Source/PluginEditor.h
+    Source/Communication/BLEClient.cpp
+    Source/Communication/BLEClient.h
+    Source/Communication/OSCBridge.cpp
+    Source/Communication/OSCBridge.h
+    Source/Communication/BLEOSCReceiver.cpp
+    Source/Communication/BLEOSCReceiver.h
+    Source/Communication/BLEManager.cpp
+    Source/Communication/BLEManager.h)
 
 # Ensure VST2 is OFF
 target_compile_definitions(test 
@@ -35,7 +44,12 @@ target_link_libraries(test
     PRIVATE
         juce::juce_audio_utils
         juce::juce_audio_devices
+        juce::juce_osc
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+        
+
+find_package(simpleble REQUIRED CONFIG)
+target_link_libraries(test PRIVATE simpleble::simpleble)
