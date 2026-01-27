@@ -24,6 +24,8 @@ target_sources(test PRIVATE
     Source/PluginProcessor.h
     Source/PluginEditor.cpp
     Source/PluginEditor.h
+    Source/GUI/BLESettingsComponent.cpp
+    Source/GUI/BLESettingsComponent.h
     Source/Communication/BLEClient.cpp
     Source/Communication/BLEClient.h
     Source/Communication/OSCBridge.cpp

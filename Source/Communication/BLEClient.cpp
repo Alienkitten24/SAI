@@ -10,6 +10,17 @@ using namespace std::chrono_literals;
 
 BLEClient::BLEClient()
 {
+}
+
+BLEClient::~BLEClient()
+{
+    // try {
+        m_peripheral.disconnect();
+    // } catch (...) {}
+}
+
+void BLEClient::start()
+{
     // initialize expected target service UUID
     m_targetService = SimpleBLE::BluetoothUUID("12341000-1234-1234-1234-123456789abc");
 
@@ -20,13 +31,6 @@ BLEClient::BLEClient()
     std::cout << "Connected to peripheral, discovering services..." << std::endl;
     
     m_uuid = getServiceCharacteristicPair();
-}
-
-BLEClient::~BLEClient()
-{
-    // try {
-        m_peripheral.disconnect();
-    // } catch (...) {}
 }
 
 SimpleBLE::Adapter BLEClient::getAdapter()
@@ -69,7 +73,7 @@ SimpleBLE::Peripheral BLEClient::getPeripheral()
     m_adapter.set_callback_on_scan_start([]() { std::cout << "Scan started." << std::endl; });
     m_adapter.set_callback_on_scan_stop([]() { std::cout << "Scan stopped." << std::endl; });
     // Scan for 5 seconds and return.
-    m_adapter.scan_for(9000);
+    m_adapter.scan_for(5000);
 
     std::cout << "The following devices were found:" << std::endl;
     for (size_t i = 0; i < peripherals.size(); i++) {
@@ -84,6 +88,7 @@ SimpleBLE::Peripheral BLEClient::getPeripheral()
         }
     }
 
+    std::cout << "throwing..." << std::endl;
     throw std::runtime_error("Audimo not found");
 }
 
@@ -137,4 +142,19 @@ SimpleBLE::ByteArray BLEClient::fetch()
     //     std::cerr << "fetch() error: " << e.what() << std::endl;
     //     throw;
     // }
+}
+
+void BLEClient::subscribe()
+{
+    // m_peripheral.notify(m_uuid.first, m_uuid.second, onNotify)
+    m_peripheral.notify(
+        m_uuid.first,
+        m_uuid.second,
+        [&](SimpleBLE::ByteArray bytes) {
+            if (onNotify) {
+                std::vector<uint8_t> v(bytes.begin(), bytes.end());
+                onNotify(v);
+            }
+        }
+    );
 }

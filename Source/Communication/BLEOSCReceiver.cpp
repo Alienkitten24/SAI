@@ -3,7 +3,6 @@
 
 BLEOSCReceiver::BLEOSCReceiver()
 {
-    start();
 }
 
 BLEOSCReceiver::~BLEOSCReceiver()
@@ -16,8 +15,7 @@ bool BLEOSCReceiver::start(int port)
     stop(); // ensure previous connection is closed
 
     if (!connect(port)) {
-        std::cout << "Error: could not connect to UDP port " << port << std::endl;
-        return false;
+        throw std::runtime_error("Cannot connect to UDP port");
     }
 
     addListener(this);
@@ -27,16 +25,20 @@ bool BLEOSCReceiver::start(int port)
 void BLEOSCReceiver::stop()
 {
     removeListener(this);
-    disconnect();
+    disconnect(); // TODO catch disconnect errors 
 }
 
 void BLEOSCReceiver::oscMessageReceived(const juce::OSCMessage& message) 
 {
-    std::cout << "Should never happen" << std::endl;
+    // if callback function is assigned, use it
+    if (onMessageReceived) {
+        onMessageReceived(message);
+    }
 }
 
 void BLEOSCReceiver::oscBundleReceived(const juce::OSCBundle& bundle)
 {
+    // if callback function is assigned, use it
     if (onBundleReceived) {
         onBundleReceived(bundle);
     }

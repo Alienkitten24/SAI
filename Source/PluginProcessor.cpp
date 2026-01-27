@@ -22,7 +22,7 @@ TestAudioProcessor::TestAudioProcessor()
                        )
 #endif
 {
-    m_bleManager.start();
+    // m_bleManager.start();
 }
 
 TestAudioProcessor::~TestAudioProcessor()

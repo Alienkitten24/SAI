@@ -14,5 +14,13 @@ OSCBridge::~OSCBridge()
 
 void OSCBridge::forward(const std::vector<uint8_t>& message)
 {
-    m_socket.write(m_destAddr, m_destPort, message.data(), (int)message.size());
+    // std::cout << "Notification: ";
+    // for (unsigned char c : message) printf("%02x ", c);
+    // std::cout << std::endl;
+
+    m_socket.write(m_destAddr, m_destPort, message.data(), (int)message.size()); // inward-facing port
+    m_socket.write(m_destAddr, m_destPort+1, message.data(), (int)message.size()); // outward-facing port
+    // TODO handle errors that socket.write() could have:
+    //      port num invalid (9001 doesn't exist or smth) fix: find new open port
+    //      network perms -- OS could prevent packet send due to lack of perms
 }

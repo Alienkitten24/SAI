@@ -11,13 +11,15 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+#include "GUI/BLESettingsComponent.h"
+
 //==============================================================================
 /**
 */
 struct sensorData {
   float time = 0.0f;
   int proximity = 0;
-  int gesture = 0;
+  juce::String gesture = "";
   float ax = 0.0f;
   float ay = 0.0f;
   float az = 0.0f;
@@ -45,13 +47,17 @@ private:
     // access the processor object that created it.
     TestAudioProcessor& audioProcessor;
 
+    BLESettingsComponent bleSettingsComponent;
+    juce::TextButton bleButton;
+
     sensorData data;
     std::array<juce::Label, 13> labels;
     // Protect access to 'data' between OSC thread and GUI thread
     juce::CriticalSection dataLock;
     void timerCallback() override;
 
-  void onOSCBundleReceived(const juce::OSCBundle &bundle);
+    void onOSCBundleReceived(const juce::OSCBundle& bundle);
+    void onOSCMessageReceived(const juce::OSCMessage& message);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessorEditor)
 };

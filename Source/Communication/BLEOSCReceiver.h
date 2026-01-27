@@ -15,6 +15,7 @@ public:
 
     // Callback invoked when a bundle is received (optional)
     std::function<void(const juce::OSCBundle&)> onBundleReceived;
+    std::function<void(const juce::OSCMessage&)> onMessageReceived;
 
 private:
     void oscBundleReceived(const juce::OSCBundle& bundle) override;

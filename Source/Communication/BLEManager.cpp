@@ -1,6 +1,8 @@
 #include "BLEManager.h"
 #include <vector>
 
+#include <iostream>
+
 BLEManager::BLEManager()
 {
 }
@@ -18,9 +20,28 @@ void BLEManager::start()
         return;
     }
 
-    m_receiver.start(9001);
+    // set onNotify function pointer
+    m_client.onNotify = [&](const std::vector<uint8_t>& msg) {
+        this->onNotify(msg);
+    };
 
-    m_thread = std::thread([this] { runLoop(); });
+    try {
+        m_client.start();
+        m_client.subscribe();
+        m_receiver.start(9001);
+
+        m_thread = std::thread([this] { runLoop(); });
+        
+        // abusing error reporting for demo purposes
+        m_lastErrorMessage = "Audimo Connected";
+        sendChangeMessage();
+    }
+    catch (const std::exception& e) {
+        std::cout << "catching... " << std::endl;
+        reportError(e.what());
+        stop();
+    }
+
 }
 
 void BLEManager::stop()
@@ -32,6 +53,12 @@ void BLEManager::stop()
     m_receiver.stop();
 }
 
+void BLEManager::reportError(const juce::String& err)
+{
+    m_lastErrorMessage = err;
+    sendChangeMessage();
+}
+
 void BLEManager::runLoop()
 {
     // currently fetch ASAP, stutters on fail. Could add delay to all reads, consistant hertz
@@ -40,6 +67,7 @@ void BLEManager::runLoop()
             SimpleBLE::ByteArray raw = m_client.fetch();
             std::vector<uint8_t> msg(raw.begin(), raw.end());
             m_bridge.forward(msg);
+            // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
         catch (const std::exception &e) {
             std::cerr << "Error in BLE Loop: " << e.what() << std::endl;
@@ -49,7 +77,21 @@ void BLEManager::runLoop()
     }
 }
 
+void BLEManager::onNotify(const std::vector<uint8_t>& msg)
+{
+    if (m_running) {
+        // try
+        m_bridge.forward(msg);
+        // catch maybe?
+    }
+}
+
 BLEOSCReceiver& BLEManager::getReceiver()
 {
     return m_receiver;
+}
+
+juce::String BLEManager::getLastErrorMessage() const
+{
+    return m_lastErrorMessage;
 }
