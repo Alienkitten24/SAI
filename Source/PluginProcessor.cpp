@@ -20,9 +20,15 @@ TestAudioProcessor::TestAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        )
+// TODO make treeState take an undo manager ?
+, m_treeState (*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
-    // m_bleManager.start();
+    // Lambda: subscribe to OSC bundles from the receiver
+    m_bleManager.getReceiver().onBundleReceived = 
+        [this](const juce::OSCBundle& bundle) { onOSCBundleReceived(bundle); };
+    m_bleManager.getReceiver().onMessageReceived = 
+        [this](const juce::OSCMessage& message) { onOSCMessageReceived(message); };
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -31,9 +37,164 @@ TestAudioProcessor::~TestAudioProcessor()
 }
 
 //==============================================================================
+SensorData TestAudioProcessor::getSensorDataCopy() const
+{
+    const juce::ScopedLock sl (lock);
+    return data;
+}
 BLEManager& TestAudioProcessor::getBLEManager() 
 {
     return m_bleManager;
+}
+
+void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
+{
+    // Temporary storage and flags
+    SensorData tmp = data; // start from current values (optional)
+    bool gotTime = false;
+    bool gotProximity = false;
+    // bool gotGesture = false;
+    bool gotAccel = false;
+    bool gotGyro = false;
+    bool gotEuler = false;
+    bool gotMic = false;
+
+    // Iterate every message in the bundle (order doesn't matter)
+    for (int i = 0; i < bundle.size(); ++i)
+    {
+        const juce::OSCMessage& message = bundle[i].getMessage();
+        auto addr = message.getAddressPattern().toString();
+
+        // Map address to an integer id, then switch on it.
+        int msgId = -1;
+        if (addr == "/audimo/time")        msgId = 0;
+        else if (addr == "/audimo/prox")   msgId = 1;
+        // else if (addr == "/audimo/gest")   msgId = 2;
+        else if (addr == "/audimo/accel")  msgId = 3;
+        else if (addr == "/audimo/gyro")   msgId = 4;
+        else if (addr == "/audimo/euler")  msgId = 5;
+        else if (addr == "/audimo/mic")    msgId = 6;
+
+        switch (msgId)
+        {
+            case 0: // /audimo/time
+                if (message.size() >= 1 && message[0].isFloat32())
+                {
+                    tmp.time = message[0].getFloat32();
+                    gotTime = true;
+                }
+                break;
+
+            case 1: // /audimo/prox
+                if (message.size() >= 1 && message[0].isInt32())
+                {
+                    tmp.proximity = message[0].getInt32();
+                    gotProximity = true;
+                }
+                break;
+
+            // TODO rethink this
+            case 2: // /audimo/gest
+                // if (message.size() >= 1 && message[0].isInt32())
+                // {
+                //     tmp.gesture = message[0].getInt32();
+                //     gotGesture = true;
+                // }
+                break;
+
+            case 3: // /audimo/accel
+                if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
+                {
+                    tmp.ax = message[0].getFloat32();
+                    tmp.ay = message[1].getFloat32();
+                    tmp.az = message[2].getFloat32();
+                    gotAccel = true;
+                }
+                break;
+
+            case 4: // /audimo/gyro
+                if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
+                {
+                    tmp.gx = message[0].getFloat32();
+                    tmp.gy = message[1].getFloat32();
+                    tmp.gz = message[2].getFloat32();
+                    gotGyro = true;
+                }
+                break;
+
+            case 5: // /audimo/euler
+                if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
+                {
+                    tmp.ex = message[0].getFloat32();
+                    tmp.ey = message[1].getFloat32();
+                    tmp.ez = message[2].getFloat32();
+                    gotEuler = true;
+                }
+                break;
+
+            case 6: // /audimo/mic
+                if (message.size() >= 1 && message[0].isFloat32())
+                {
+                    tmp.mic_rms = message[0].getFloat32();
+                    gotMic = true;
+                }
+                break;
+
+            default:
+                // unknown address: ignore
+                break;
+        }
+    }
+
+    // Apply updates under lock (only overwrite fields that were present)
+    {
+        const juce::ScopedLock sl (lock);
+        if (gotTime)        data.time = tmp.time;
+        if (gotProximity)   data.proximity = tmp.proximity;
+        // if (gotGesture)     data.gesture = tmp.gesture;
+        if (gotAccel)       { data.ax = tmp.ax; data.ay = tmp.ay; data.az = tmp.az; }
+        if (gotGyro)        { data.gx = tmp.gx; data.gy = tmp.gy; data.gz = tmp.gz; }
+        if (gotEuler)       { data.ex = tmp.ex; data.ey = tmp.ey; data.ez = tmp.ez; }
+        if (gotMic)         data.mic_rms = tmp.mic_rms;
+    }
+}
+
+void TestAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
+{
+    auto addr = message.getAddressPattern().toString();
+    if (addr == "/audimo/gest") {
+        juce::String tmp = data.gesture;
+        bool gotGesture = false;
+
+        if (message.size() >= 1 && message[0].isString())
+        {
+            tmp = message[0].getString();
+            gotGesture = true;
+        }
+
+        // Apply updates under lock (only overwrite fields that were present)
+        {
+            const juce::ScopedLock sl (lock);
+            if (gotGesture)     data.gesture = tmp;
+        }
+    }
+}
+
+//==============================================================================
+juce::AudioProcessorValueTreeState& TestAudioProcessor::getTreeState()
+{
+    return m_treeState;
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout TestAudioProcessor::createParameterLayout()
+{
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(
+        "gain", "Gain", 0.0f, 1.0f, 0.5f
+    ));
+
+    return { params.begin(), params.end() };
 }
 
 //==============================================================================
@@ -158,11 +319,15 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
+
+    float gain = *m_treeState.getRawParameterValue("gain");
+
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
+        buffer.applyGain(channel, 0, buffer.getNumSamples(), gain);
     }
 }
 

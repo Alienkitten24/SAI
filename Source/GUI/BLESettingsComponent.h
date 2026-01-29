@@ -3,19 +3,18 @@
 #include <JuceHeader.h>
 #include "../PluginProcessor.h"
 
-class BLESettingsComponent : public juce::Component, public juce::ChangeListener
+class BLESettingsComponent : public juce::Component
 {
 public:
-    BLESettingsComponent (TestAudioProcessor&);
+    BLESettingsComponent();
     ~BLESettingsComponent();
 
     void paint(juce::Graphics& g) override;
     void resized() override;
     void visibilityChanged() override;
-    void changeListenerCallback(juce::ChangeBroadcaster* source) override;
+    void setErrorMessage(const juce::String& msg);
 
 private:
-    TestAudioProcessor& audioProcessor;
     juce::Label label;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BLESettingsComponent)

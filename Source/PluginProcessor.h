@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 #include "Communication/BLEManager.h"
+#include "Model/SensorData.h"
+#include <memory>
 
 //==============================================================================
 /**
@@ -54,10 +56,24 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //==============================================================================
+    SensorData getSensorDataCopy() const; 
     BLEManager& getBLEManager();
+    void onOSCBundleReceived(const juce::OSCBundle& bundle);
+    void onOSCMessageReceived(const juce::OSCMessage& message);
+
+    //==============================================================================
+    juce::AudioProcessorValueTreeState& getTreeState();
+
 private:
     //==============================================================================
     BLEManager m_bleManager;
+    mutable juce::CriticalSection lock; // for sensordata
+    SensorData data;
+
+    //==============================================================================
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    juce::AudioProcessorValueTreeState m_treeState;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)
 };

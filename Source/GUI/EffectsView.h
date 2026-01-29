@@ -1,0 +1,25 @@
+#pragma once
+
+#include <JuceHeader.h>
+#include "../PluginProcessor.h"
+#include "GainComponent.h"
+
+class EffectsView : public juce::Component
+{
+public:
+    EffectsView (TestAudioProcessor&);
+    ~EffectsView();
+
+    void paint(juce::Graphics& g) override;
+    void resized() override;
+
+private:
+    TestAudioProcessor& audioProcessor;
+
+    juce::Label label;
+
+    GainComponent gainComponent;
+
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectsView)
+};

@@ -1,0 +1,28 @@
+#pragma once
+
+#include <JuceHeader.h>
+
+#include "../PluginProcessor.h"
+#include "BLESettingsComponent.h"
+
+class AdvancedView : public juce::Component, public juce::Timer, public juce::ChangeListener
+{
+public:
+    AdvancedView (TestAudioProcessor&);
+    ~AdvancedView();
+
+    void paint(juce::Graphics& g) override;
+    void resized() override;
+
+    void changeListenerCallback(juce::ChangeBroadcaster* source) override;
+private:
+    TestAudioProcessor& audioProcessor;
+
+    BLESettingsComponent bleSettingsComponent;
+    juce::TextButton bleButton;
+    std::array<juce::Label, 13> rawDataLabels;
+
+    void timerCallback() override;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AdvancedView)
+};

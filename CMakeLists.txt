@@ -20,20 +20,31 @@ juce_add_plugin(test
 juce_generate_juce_header(test)
 
 target_sources(test PRIVATE
-    Source/PluginProcessor.cpp
     Source/PluginProcessor.h
-    Source/PluginEditor.cpp
+    Source/PluginProcessor.cpp
     Source/PluginEditor.h
-    Source/GUI/BLESettingsComponent.cpp
+    Source/PluginEditor.cpp
+    Source/Model/SensorData.h
+    Source/GUI/NavBar.h
+    Source/GUI/NavBar.cpp
+    Source/GUI/EffectsView.h
+    Source/GUI/EffectsView.cpp
+    Source/GUI/MatrixView.h
+    Source/GUI/MatrixView.cpp
+    Source/GUI/AdvancedView.h
+    Source/GUI/AdvancedView.cpp
     Source/GUI/BLESettingsComponent.h
-    Source/Communication/BLEClient.cpp
+    Source/GUI/BLESettingsComponent.cpp
+    Source/GUI/GainComponent.h
+    Source/GUI/GainComponent.cpp
     Source/Communication/BLEClient.h
-    Source/Communication/OSCBridge.cpp
+    Source/Communication/BLEClient.cpp
     Source/Communication/OSCBridge.h
-    Source/Communication/BLEOSCReceiver.cpp
+    Source/Communication/OSCBridge.cpp
     Source/Communication/BLEOSCReceiver.h
-    Source/Communication/BLEManager.cpp
-    Source/Communication/BLEManager.h)
+    Source/Communication/BLEOSCReceiver.cpp
+    Source/Communication/BLEManager.h
+    Source/Communication/BLEManager.cpp)
 
 # Ensure VST2 is OFF
 target_compile_definitions(test 

@@ -2,8 +2,7 @@
 
 #include <iostream>
 
-BLESettingsComponent::BLESettingsComponent(TestAudioProcessor& p)
-    : audioProcessor(p)
+BLESettingsComponent::BLESettingsComponent()
 {
     addAndMakeVisible(label);
     label.setFont(juce::Font(20.0f));
@@ -19,7 +18,6 @@ void BLESettingsComponent::paint(juce::Graphics& g)
 
     g.setColour(juce::Colours::white);
     g.setFont(juce::Font (15.0f));
-    // g.drawFittedText("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
 
 }
 
@@ -34,11 +32,9 @@ void BLESettingsComponent::visibilityChanged()
         label.setText("Scanning for Bluetooth Devices...", juce::dontSendNotification);
 }
 
-
-void BLESettingsComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
+void BLESettingsComponent::setErrorMessage(const juce::String& msg)
 {
-    juce::String msg = audioProcessor.getBLEManager().getLastErrorMessage();
     std::cout << "callback " << msg << std::endl;
     label.setText(msg, juce::dontSendNotification);
-    repaint();
+    // repaint(); idk if necessary 
 }
