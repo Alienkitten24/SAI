@@ -9,9 +9,11 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <memory>
+
 #include "Communication/BLEManager.h"
 #include "Model/SensorData.h"
-#include <memory>
+#include "Model/EffectsTreeState.h"
 
 //==============================================================================
 /**
@@ -69,10 +71,10 @@ private:
     //==============================================================================
     BLEManager m_bleManager;
     mutable juce::CriticalSection lock; // for sensordata
-    SensorData data;
+    SensorData m_sensorData;
 
     //==============================================================================
-    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    // juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState m_treeState;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)

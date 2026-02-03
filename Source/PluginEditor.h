@@ -11,10 +11,10 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
-#include "GUI/NavBar.h"
-#include "GUI/EffectsView.h"
-#include "GUI/MatrixView.h"
-#include "GUI/AdvancedView.h"
+#include "Components/Navigation/NavBar.h"
+#include "Views/EffectsView.h"
+#include "Views/MatrixView.h"
+#include "Views/AdvancedView.h"
 
 class TestAudioProcessorEditor  : public juce::AudioProcessorEditor 
 {

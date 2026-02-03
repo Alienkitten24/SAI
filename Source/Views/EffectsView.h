@@ -2,7 +2,7 @@
 
 #include <JuceHeader.h>
 #include "../PluginProcessor.h"
-#include "GainComponent.h"
+#include "../Components/Effects/GainComponent.h"
 
 class EffectsView : public juce::Component
 {

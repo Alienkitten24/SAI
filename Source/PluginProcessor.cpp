@@ -21,7 +21,7 @@ TestAudioProcessor::TestAudioProcessor()
                      #endif
                        )
 // TODO make treeState take an undo manager ?
-, m_treeState (*this, nullptr, "PARAMETERS", createParameterLayout())
+, m_treeState (*this, nullptr, "PARAMETERS", EffectsTreeState::createParameterLayout())
 #endif
 {
     // Lambda: subscribe to OSC bundles from the receiver
@@ -40,7 +40,7 @@ TestAudioProcessor::~TestAudioProcessor()
 SensorData TestAudioProcessor::getSensorDataCopy() const
 {
     const juce::ScopedLock sl (lock);
-    return data;
+    return m_sensorData;
 }
 BLEManager& TestAudioProcessor::getBLEManager() 
 {
@@ -50,7 +50,7 @@ BLEManager& TestAudioProcessor::getBLEManager()
 void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
 {
     // Temporary storage and flags
-    SensorData tmp = data; // start from current values (optional)
+    SensorData tmp = m_sensorData; // start from current values (optional)
     bool gotTime = false;
     bool gotProximity = false;
     // bool gotGesture = false;
@@ -149,13 +149,13 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
     // Apply updates under lock (only overwrite fields that were present)
     {
         const juce::ScopedLock sl (lock);
-        if (gotTime)        data.time = tmp.time;
-        if (gotProximity)   data.proximity = tmp.proximity;
-        // if (gotGesture)     data.gesture = tmp.gesture;
-        if (gotAccel)       { data.ax = tmp.ax; data.ay = tmp.ay; data.az = tmp.az; }
-        if (gotGyro)        { data.gx = tmp.gx; data.gy = tmp.gy; data.gz = tmp.gz; }
-        if (gotEuler)       { data.ex = tmp.ex; data.ey = tmp.ey; data.ez = tmp.ez; }
-        if (gotMic)         data.mic_rms = tmp.mic_rms;
+        if (gotTime)        m_sensorData.time = tmp.time;
+        if (gotProximity)   m_sensorData.proximity = tmp.proximity;
+        // if (gotGesture)     m_sensorData.gesture = tmp.gesture;
+        if (gotAccel)       { m_sensorData.ax = tmp.ax; m_sensorData.ay = tmp.ay; m_sensorData.az = tmp.az; }
+        if (gotGyro)        { m_sensorData.gx = tmp.gx; m_sensorData.gy = tmp.gy; m_sensorData.gz = tmp.gz; }
+        if (gotEuler)       { m_sensorData.ex = tmp.ex; m_sensorData.ey = tmp.ey; m_sensorData.ez = tmp.ez; }
+        if (gotMic)         m_sensorData.mic_rms = tmp.mic_rms;
     }
 }
 
@@ -163,7 +163,7 @@ void TestAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
 {
     auto addr = message.getAddressPattern().toString();
     if (addr == "/audimo/gest") {
-        juce::String tmp = data.gesture;
+        juce::String tmp = m_sensorData.gesture;
         bool gotGesture = false;
 
         if (message.size() >= 1 && message[0].isString())
@@ -175,7 +175,7 @@ void TestAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
         // Apply updates under lock (only overwrite fields that were present)
         {
             const juce::ScopedLock sl (lock);
-            if (gotGesture)     data.gesture = tmp;
+            if (gotGesture)     m_sensorData.gesture = tmp;
         }
     }
 }
@@ -184,17 +184,6 @@ void TestAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
 juce::AudioProcessorValueTreeState& TestAudioProcessor::getTreeState()
 {
     return m_treeState;
-}
-
-juce::AudioProcessorValueTreeState::ParameterLayout TestAudioProcessor::createParameterLayout()
-{
-    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
-
-    params.push_back(std::make_unique<juce::AudioParameterFloat>(
-        "gain", "Gain", 0.0f, 1.0f, 0.5f
-    ));
-
-    return { params.begin(), params.end() };
 }
 
 //==============================================================================
@@ -320,7 +309,7 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
 
-    float gain = *m_treeState.getRawParameterValue("gain");
+    float gain = *m_treeState.getRawParameterValue(EffectsTreeState::paramNames::Gain);
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {

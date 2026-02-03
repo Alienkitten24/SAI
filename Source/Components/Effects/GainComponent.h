@@ -16,7 +16,7 @@ public:
 private:
     juce::AudioProcessorValueTreeState& treeState;
 
-    juce::Slider gainSlider;
+    juce::Slider gainKnob;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GainComponent)

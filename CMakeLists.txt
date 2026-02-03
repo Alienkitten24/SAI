@@ -20,23 +20,18 @@ juce_add_plugin(test
 juce_generate_juce_header(test)
 
 target_sources(test PRIVATE
+    # --- CORE ---------------------------------------
     Source/PluginProcessor.h
     Source/PluginProcessor.cpp
     Source/PluginEditor.h
     Source/PluginEditor.cpp
+    
+    # --- MODEL --------------------------------------
     Source/Model/SensorData.h
-    Source/GUI/NavBar.h
-    Source/GUI/NavBar.cpp
-    Source/GUI/EffectsView.h
-    Source/GUI/EffectsView.cpp
-    Source/GUI/MatrixView.h
-    Source/GUI/MatrixView.cpp
-    Source/GUI/AdvancedView.h
-    Source/GUI/AdvancedView.cpp
-    Source/GUI/BLESettingsComponent.h
-    Source/GUI/BLESettingsComponent.cpp
-    Source/GUI/GainComponent.h
-    Source/GUI/GainComponent.cpp
+    Source/Model/EffectsTreeState.h
+    Source/Model/EffectsTreeState.cpp
+
+    # --- COMMUNICATION ------------------------------
     Source/Communication/BLEClient.h
     Source/Communication/BLEClient.cpp
     Source/Communication/OSCBridge.h
@@ -44,7 +39,29 @@ target_sources(test PRIVATE
     Source/Communication/BLEOSCReceiver.h
     Source/Communication/BLEOSCReceiver.cpp
     Source/Communication/BLEManager.h
-    Source/Communication/BLEManager.cpp)
+    Source/Communication/BLEManager.cpp
+
+    # --- VIEWS --------------------------------------
+    Source/Views/EffectsView.h
+    Source/Views/EffectsView.cpp
+    Source/Views/MatrixView.h
+    Source/Views/MatrixView.cpp
+    Source/Views/AdvancedView.h
+    Source/Views/AdvancedView.cpp
+    
+    # --- COMPONENTS ---------------------------------
+    # --- EFFECTS ---
+    Source/Components/Effects/GainComponent.h
+    Source/Components/Effects/GainComponent.cpp
+    
+    # --- NAVIGATION ---
+    Source/Components/Navigation/NavBar.h
+    Source/Components/Navigation/NavBar.cpp
+
+    # --- DIALOG ---
+    Source/Components/Dialog/BLESettingsComponent.h
+    Source/Components/Dialog/BLESettingsComponent.cpp
+)
 
 # Ensure VST2 is OFF
 target_compile_definitions(test 

@@ -3,27 +3,22 @@
 #include <iostream>
 
 BLESettingsComponent::BLESettingsComponent()
+    : juce::DialogWindow("BLE Settings", juce::Colours::lightgrey, true)
 {
     addAndMakeVisible(label);
     label.setFont(juce::Font(20.0f));
+    
+    setSize(400, 150);
+    setResizable(true, true);
 }
 
 BLESettingsComponent::~BLESettingsComponent()
 {
 }
 
-void BLESettingsComponent::paint(juce::Graphics& g)
-{
-    g.fillAll(juce::Colours::green);
-
-    g.setColour(juce::Colours::white);
-    g.setFont(juce::Font (15.0f));
-
-}
-
 void BLESettingsComponent::resized()
 {
-    label.setBounds(10, 10, getWidth() - 20, 30);
+    label.setBounds(10, 40, getWidth() - 20, 30);
 }
 
 void BLESettingsComponent::visibilityChanged()
@@ -36,5 +31,9 @@ void BLESettingsComponent::setErrorMessage(const juce::String& msg)
 {
     std::cout << "callback " << msg << std::endl;
     label.setText(msg, juce::dontSendNotification);
-    // repaint(); idk if necessary 
+}
+
+void BLESettingsComponent::closeButtonPressed()
+{
+    setVisible(false); // Hides the window when the close button is pressed
 }

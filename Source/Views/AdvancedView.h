@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 
 #include "../PluginProcessor.h"
-#include "BLESettingsComponent.h"
+#include "../Components/Dialog/BLESettingsComponent.h"
 
 class AdvancedView : public juce::Component, public juce::Timer, public juce::ChangeListener
 {
