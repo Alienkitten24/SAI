@@ -329,7 +329,7 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     juce::dsp::ProcessContextReplacing<float> context (block);
 
     float gainDb = gainParam->load();
-    std::cout << "gain: " << gainDb << std::endl;
+    // std::cout << "gain: " << gainDb << std::endl;
     gainDsp.setGain(gainDb);
 
     gainDsp.process(context);

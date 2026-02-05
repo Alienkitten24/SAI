@@ -20,6 +20,7 @@ namespace EffectsTreeState
 {
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout(); 
 
+    // maybe should be paramId ?
     namespace paramNames {
         inline const juce::String Gain { "gain" };
     };
