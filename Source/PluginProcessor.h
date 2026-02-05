@@ -14,6 +14,7 @@
 #include "Communication/BLEManager.h"
 #include "Model/SensorData.h"
 #include "Model/EffectsTreeState.h"
+#include "Dsp/GainDsp.h"
 
 //==============================================================================
 /**
@@ -29,7 +30,7 @@ public:
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
-   #ifndef JucePlugin_PreferredChannelConfigurations
+   #ifndef PreferredChannelConfigurations
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
@@ -75,7 +76,13 @@ private:
 
     //==============================================================================
     // juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    juce::AudioProcessorValueTreeState m_treeState;
+    // TODO make treeState take an undo manager ?
+    juce::AudioProcessorValueTreeState m_treeState {
+      *this, nullptr, "PARAMETERS", EffectsTreeState::createParameterLayout()
+    };
+
+    GainDsp gainDsp;
+    std::atomic<float>* gainParam = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)
 };

@@ -30,6 +30,10 @@ target_sources(test PRIVATE
     Source/Model/SensorData.h
     Source/Model/EffectsTreeState.h
     Source/Model/EffectsTreeState.cpp
+    
+    # --- DSP ----------------------------------------
+    Source/Dsp/GainDsp.h
+    Source/Dsp/GainDsp.cpp
 
     # --- COMMUNICATION ------------------------------
     Source/Communication/BLEClient.h
@@ -75,6 +79,7 @@ target_link_libraries(test
         juce::juce_audio_utils
         juce::juce_audio_devices
         juce::juce_osc
+        juce::juce_dsp
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags

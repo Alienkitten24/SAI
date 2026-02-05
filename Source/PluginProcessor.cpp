@@ -9,6 +9,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include <stdio.h>
+
 //==============================================================================
 TestAudioProcessor::TestAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -20,8 +22,6 @@ TestAudioProcessor::TestAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        )
-// TODO make treeState take an undo manager ?
-, m_treeState (*this, nullptr, "PARAMETERS", EffectsTreeState::createParameterLayout())
 #endif
 {
     // Lambda: subscribe to OSC bundles from the receiver
@@ -29,6 +29,8 @@ TestAudioProcessor::TestAudioProcessor()
         [this](const juce::OSCBundle& bundle) { onOSCBundleReceived(bundle); };
     m_bleManager.getReceiver().onMessageReceived = 
         [this](const juce::OSCMessage& message) { onOSCMessageReceived(message); };
+
+    gainParam = m_treeState.getRawParameterValue("gain");
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -253,6 +255,12 @@ void TestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    juce::dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.numChannels = getTotalNumOutputChannels();
+
+    gainDsp.prepare(spec);
 }
 
 void TestAudioProcessor::releaseResources()
@@ -309,15 +317,22 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
 
-    float gain = *m_treeState.getRawParameterValue(EffectsTreeState::paramNames::Gain);
+    // float gain = *m_treeState.getRawParameterValue(EffectsTreeState::paramNames::Gain);
+    // for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    // {
+    //     auto* channelData = buffer.getWritePointer (channel);
+    //     // ..do something to the data...
+    //     buffer.applyGain(channel, 0, buffer.getNumSamples(), gain);
+    // }
 
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    juce::dsp::AudioBlock<float> block (buffer);
+    juce::dsp::ProcessContextReplacing<float> context (block);
 
-        // ..do something to the data...
-        buffer.applyGain(channel, 0, buffer.getNumSamples(), gain);
-    }
+    float gainDb = gainParam->load();
+    std::cout << "gain: " << gainDb << std::endl;
+    gainDsp.setGain(gainDb);
+
+    gainDsp.process(context);
 }
 
 //==============================================================================
