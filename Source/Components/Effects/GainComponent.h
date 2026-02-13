@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include <memory>
+#include "../../Model/EffectsTreeState.h"
 
 class GainComponent : public juce::Component
 {

@@ -9,8 +9,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-#include <stdio.h>
-
 //==============================================================================
 TestAudioProcessor::TestAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -30,7 +28,11 @@ TestAudioProcessor::TestAudioProcessor()
     m_bleManager.getReceiver().onMessageReceived = 
         [this](const juce::OSCMessage& message) { onOSCMessageReceived(message); };
 
-    gainParam = m_treeState.getRawParameterValue("gain");
+    gainParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Gain);
+
+    distortionParamsPointers.driveParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Drive);
+    distortionParamsPointers.postGainParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::PostGain);
+    distortionParamsPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Mix);
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -261,6 +263,7 @@ void TestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.numChannels = getTotalNumOutputChannels();
 
     gainDsp.prepare(spec);
+    distortionDsp.prepare(spec);
 }
 
 void TestAudioProcessor::releaseResources()
@@ -329,10 +332,21 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     juce::dsp::ProcessContextReplacing<float> context (block);
 
     float gainDb = gainParam->load();
-    // std::cout << "gain: " << gainDb << std::endl;
     gainDsp.setGain(gainDb);
 
+    // actually doesn't this create a new obj every tick
+    DistortionParams distortionParams;
+    distortionParams.drive = distortionParamsPointers.driveParam->load();
+    distortionParams.postGain = distortionParamsPointers.postGainParam->load();
+    distortionParams.mix = distortionParamsPointers.mixParam->load();
+    // // distortionDsp.setDriveGain(driveGain);
+    distortionDsp.update(distortionParams);
+
+    // each dsp uses the same context but it stacks
+    // ex: gainDsp.proc(c); reverbDsp.proc(c) <- this c has gain on it 
+    // can use unique contexts for parallel processing (ex wet/dry knob)
     gainDsp.process(context);
+    distortionDsp.process(context);
 }
 
 //==============================================================================

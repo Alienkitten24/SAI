@@ -30,10 +30,13 @@ target_sources(test PRIVATE
     Source/Model/SensorData.h
     Source/Model/EffectsTreeState.h
     Source/Model/EffectsTreeState.cpp
+    Source/Model/DistortionParams.h
     
     # --- DSP ----------------------------------------
     Source/Dsp/GainDsp.h
     Source/Dsp/GainDsp.cpp
+    Source/Dsp/DistortionDsp.h
+    Source/Dsp/DistortionDsp.cpp
 
     # --- COMMUNICATION ------------------------------
     Source/Communication/BLEClient.h
@@ -57,6 +60,8 @@ target_sources(test PRIVATE
     # --- EFFECTS ---
     Source/Components/Effects/GainComponent.h
     Source/Components/Effects/GainComponent.cpp
+    Source/Components/Effects/DistortionComponent.h
+    Source/Components/Effects/DistortionComponent.cpp
     
     # --- NAVIGATION ---
     Source/Components/Navigation/NavBar.h

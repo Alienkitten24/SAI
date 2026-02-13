@@ -19,7 +19,7 @@ void GainComponent::visibilityChanged()
     if (isVisible() && !gainAttachment)
     {
         gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-            treeState, "gain", gainKnob
+            treeState, ParamIDs::Gain::Gain, gainKnob
         );
     }
 }

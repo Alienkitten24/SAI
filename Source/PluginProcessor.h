@@ -14,7 +14,9 @@
 #include "Communication/BLEManager.h"
 #include "Model/SensorData.h"
 #include "Model/EffectsTreeState.h"
+#include "Model/DistortionParams.h"
 #include "Dsp/GainDsp.h"
+#include "Dsp/DistortionDsp.h"
 
 //==============================================================================
 /**
@@ -77,12 +79,21 @@ private:
     //==============================================================================
     // juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     // TODO make treeState take an undo manager ?
+    // research if defining { } is better to do in .h or .cpp 
     juce::AudioProcessorValueTreeState m_treeState {
-      *this, nullptr, "PARAMETERS", EffectsTreeState::createParameterLayout()
+      *this, nullptr, "PARAMETERS", createParameterLayout()
     };
 
     GainDsp gainDsp;
     std::atomic<float>* gainParam = nullptr;
+
+    DistortionDsp distortionDsp;
+    struct {
+      std::atomic<float>* driveParam = nullptr;
+      std::atomic<float>* postGainParam = nullptr;
+      std::atomic<float>* mixParam = nullptr;
+    } distortionParamsPointers;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)
 };

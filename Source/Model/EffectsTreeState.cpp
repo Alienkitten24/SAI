@@ -1,24 +1,39 @@
 #include "EffectsTreeState.h"
 
-// EffectsTreeState::EffectsTreeState()
-// {
-// }
-
-// EffectsTreeState::~EffectsTreeState()
-// {
-// }
-
-namespace EffectsTreeState {
-    juce::AudioProcessorValueTreeState::ParameterLayout EffectsTreeState::createParameterLayout()
-    {
-        std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
+{
+    std::vector<std::unique_ptr<juce::AudioProcessorParameterGroup>> params;
+    // params.reserve()
 
 
-        // TODO figure out a good Db range (maybe use normalizablerange<> ?)
-        params.push_back(std::make_unique<juce::AudioParameterFloat>(
-            "gain", "Gain", -60.0f, 0.0f, -6.0f
+    // maybe use emplace_back over push_back ? need to research
+    // TODO figure out a good Db range (maybe use normalizablerange<> ?)
+    // https://github.com/JanWilczek/juce-webview-tutorial/blob/main/plugin/source/PluginProcessor.cpp line 211
+    // TODO apparently you don't have to addChild, can just init it in the group line
+    auto gainGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
+        GroupIDs::Gain, "Gain", "|"
+    );
+        gainGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Gain::Gain, "Gain", -60.0f, 0.0f, -6.0f
         ));
 
-        return { params.begin(), params.end() };
-    }
+
+    auto distortionGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
+        GroupIDs::Distortion, "Distortion", "|"
+    );
+        distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Distortion::Drive, "Drive", 0.0f, 40.0f, 10.0f
+        ));
+        distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Distortion::PostGain, "Post Gain", -60.0f, 0.0f, -6.0f
+        ));
+        // TODO i think this has usuable vales from 0-1 rn and 1-100 is the same
+        distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Distortion::Mix, "Mix", 0.0f, 40.0f, 10.0f
+        ));
+    
+    params.push_back(std::move(gainGroup));
+    params.push_back(std::move(distortionGroup));
+
+    return { params.begin(), params.end() };
 }
