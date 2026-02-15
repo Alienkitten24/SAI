@@ -2,32 +2,20 @@
 
 #include <JuceHeader.h>
 #include <memory>
+#include "EffectComponent.h"
 #include "../../Model/EffectsTreeState.h"
 
-class DistortionComponent : public juce::Component
+class DistortionComponent : public EffectComponent
 {
 public:
-    DistortionComponent (juce::AudioProcessorValueTreeState& state);
-    ~DistortionComponent ();
+    DistortionComponent(juce::AudioProcessorValueTreeState& state);
+    ~DistortionComponent();
 
-    void paint(juce::Graphics& g) override;
-    void resized() override;
-
-    void visibilityChanged() override;
+    void createParameterControls() override;
+    void layoutMainContent() override;
 
 private:
-    // juce::LookAndFeel_V4 otherLookAndFeel; // [1]
-    // dropdown type? soft hard etc
-    // juce::ComboBox typeMenu;
-    // juce::Slider driveKnob;
-    // juce::Slider dryKnob or mixKnob;
-
-    juce::Label nameLabel;
-    
-    juce::AudioProcessorValueTreeState& treeState;
-
-    juce::ToggleButton activeButton;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> activeAttachment;
+    void linkAttachments();
 
     juce::Slider driveKnob;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveAttachment;

@@ -58,6 +58,8 @@ target_sources(test PRIVATE
     
     # --- COMPONENTS ---------------------------------
     # --- EFFECTS ---
+    Source/Components/Effects/EffectComponent.h
+    Source/Components/Effects/EffectComponent.cpp
     Source/Components/Effects/GainComponent.h
     Source/Components/Effects/GainComponent.cpp
     Source/Components/Effects/DistortionComponent.h

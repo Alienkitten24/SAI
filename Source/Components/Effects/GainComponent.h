@@ -3,19 +3,19 @@
 #include <JuceHeader.h>
 #include <memory>
 #include "../../Model/EffectsTreeState.h"
+#include "EffectComponent.h"
 
-class GainComponent : public juce::Component
+class GainComponent : public EffectComponent
 {
 public:
     GainComponent (juce::AudioProcessorValueTreeState& state);
     ~GainComponent ();
 
-    void paint(juce::Graphics& g) override;
-    void resized() override;
-    void visibilityChanged() override;
+    void createParameterControls() override;
+    void layoutMainContent() override;
+    void linkAttachments() override;
 
 private:
-    juce::AudioProcessorValueTreeState& treeState;
 
     juce::Slider gainKnob;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment;

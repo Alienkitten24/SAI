@@ -1,22 +1,29 @@
 #include "GainComponent.h"
 
 GainComponent::GainComponent(juce::AudioProcessorValueTreeState& state)
-    : treeState (state)
+    : EffectComponent(state)
 {
-    gainKnob.setSliderStyle(juce::Slider::SliderStyle::Rotary); // Changed to Rotary style
-    gainKnob.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 25);
-    gainKnob.setRange(0.0, 100.0, 0.1); // Set range from 0 to 100
-    addAndMakeVisible(gainKnob);
+    setEffectName("Gain");
+    createParameterControls();
 }
 
 GainComponent::~GainComponent()
 {
 }
 
-void GainComponent::visibilityChanged()
+void GainComponent::createParameterControls()
 {
-    // Create attachment only once when component becomes visible
-    if (isVisible() && !gainAttachment)
+    gainKnob.setSliderStyle(juce::Slider::SliderStyle::Rotary); // Changed to Rotary style
+    gainKnob.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 25);
+    gainKnob.setRange(0.0, 100.0, 0.1); // Set range from 0 to 100
+    addAndMakeVisible(gainKnob);
+    
+    linkAttachments();
+}
+
+void GainComponent::linkAttachments()
+{
+    if (!gainAttachment)
     {
         gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
             treeState, ParamIDs::Gain::Gain, gainKnob
@@ -24,12 +31,9 @@ void GainComponent::visibilityChanged()
     }
 }
 
-void GainComponent::paint(juce::Graphics& g)
+void GainComponent::layoutMainContent()
 {
-    g.fillAll(juce::Colours::grey);
-}
-
-void GainComponent::resized()
-{
-    gainKnob.setBounds(getLocalBounds()); // Adjust bounds for the knob
+    auto bounds = getLocalBounds();
+    bounds.removeFromTop(TITLE_BAR_HEIGHT);
+    gainKnob.setBounds(getLocalBounds());
 }
