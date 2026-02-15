@@ -16,6 +16,7 @@ namespace ParamIDs {
         inline constexpr auto Gain = "gain_gain";
     };
     namespace Distortion {
+        inline constexpr auto Active = "dist_active";
         inline constexpr auto Drive = "dist_drive";
         inline constexpr auto PostGain = "dist_postGain";
         inline constexpr auto Mix = "dist_Mix";

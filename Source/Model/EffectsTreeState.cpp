@@ -21,6 +21,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     auto distortionGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
         GroupIDs::Distortion, "Distortion", "|"
     );
+        distortionGroup->addChild(std::make_unique<juce::AudioParameterBool>(
+            ParamIDs::Distortion::Active, "Active", false
+        ));
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Distortion::Drive, "Drive", 0.0f, 40.0f, 10.0f
         ));

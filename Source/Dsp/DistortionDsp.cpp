@@ -31,6 +31,9 @@ void DistortionDsp::prepare(const juce::dsp::ProcessSpec& spec)
     waveshaper.functionToUse = [] (float x) { 
         return std::tanh(x); 
         // return std::tanh(x*drive + asymmetry); 
+
+        // hard clipping
+        // return juce::jlimit(-1.0f, 1.0f, x);
     };
 
     dryWet.prepare(spec);

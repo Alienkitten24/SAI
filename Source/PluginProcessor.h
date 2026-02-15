@@ -89,6 +89,7 @@ private:
 
     DistortionDsp distortionDsp;
     struct {
+      std::atomic<float>* activeParam = nullptr;
       std::atomic<float>* driveParam = nullptr;
       std::atomic<float>* postGainParam = nullptr;
       std::atomic<float>* mixParam = nullptr;

@@ -30,6 +30,7 @@ TestAudioProcessor::TestAudioProcessor()
 
     gainParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Gain);
 
+    distortionParamsPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Active);
     distortionParamsPointers.driveParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Drive);
     distortionParamsPointers.postGainParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::PostGain);
     distortionParamsPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Mix);
@@ -334,8 +335,9 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     float gainDb = gainParam->load();
     gainDsp.setGain(gainDb);
 
-    // actually doesn't this create a new obj every tick
+    // TODO actually doesn't this create a new obj every tick
     DistortionParams distortionParams;
+    distortionParams.active = distortionParamsPointers.activeParam->load();
     distortionParams.drive = distortionParamsPointers.driveParam->load();
     distortionParams.postGain = distortionParamsPointers.postGainParam->load();
     distortionParams.mix = distortionParamsPointers.mixParam->load();
@@ -346,7 +348,7 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     // ex: gainDsp.proc(c); reverbDsp.proc(c) <- this c has gain on it 
     // can use unique contexts for parallel processing (ex wet/dry knob)
     gainDsp.process(context);
-    distortionDsp.process(context);
+    if (distortionParams.active)      distortionDsp.process(context);
 }
 
 //==============================================================================

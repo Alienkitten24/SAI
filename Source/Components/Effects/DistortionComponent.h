@@ -21,8 +21,13 @@ private:
     // juce::ComboBox typeMenu;
     // juce::Slider driveKnob;
     // juce::Slider dryKnob or mixKnob;
+
+    juce::Label nameLabel;
     
     juce::AudioProcessorValueTreeState& treeState;
+
+    juce::ToggleButton activeButton;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> activeAttachment;
 
     juce::Slider driveKnob;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveAttachment;

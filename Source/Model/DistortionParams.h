@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 
 struct DistortionParams {
+    bool active;
     float drive;
     float postGain;
     float mix;
