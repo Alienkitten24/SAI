@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../Model/GainParams.h"
 
 class GainDsp
 {
@@ -12,11 +13,7 @@ public:
     void process(const juce::dsp::ProcessContextReplacing<float>& context); 
     void reset();
 
-    void setGain(float gainDb);
-
-    // enum {
-    //     gainIndex
-    // };
+    void update(const GainParams& p);
 
 private:
     juce::dsp::Gain<float> gain;

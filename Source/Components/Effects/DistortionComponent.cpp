@@ -30,6 +30,10 @@ void DistortionComponent::createParameterControls()
     mixKnob.setRange(0.0, 100.0, 0.1);
     addAndMakeVisible(mixKnob);
 
+    typeComboBox.addItem("Soft Clip", 1);
+    typeComboBox.addItem("Hard Clip", 2);
+    addAndMakeVisible(typeComboBox);
+
     linkAttachments();
 }
 
@@ -59,6 +63,12 @@ void DistortionComponent::linkAttachments()
             treeState, ParamIDs::Distortion::Mix, mixKnob
         );
     }
+    if (!typeAttachment)
+    {
+        typeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(
+            treeState, ParamIDs::Distortion::Type, typeComboBox
+        );
+    }
 }
 
 void DistortionComponent::layoutMainContent()
@@ -66,9 +76,9 @@ void DistortionComponent::layoutMainContent()
     auto bounds = getLocalBounds();
     bounds.removeFromTop(TITLE_BAR_HEIGHT);
 
-    // Layout for three knobs in the main content area
-    int knobWidth = bounds.getWidth() / 3;
-    driveKnob.setBounds(bounds.removeFromLeft(knobWidth).reduced(5));
-    postGainKnob.setBounds(bounds.removeFromLeft(knobWidth).reduced(5));
-    mixKnob.setBounds(bounds.reduced(5));
+    int itemWidth = bounds.getWidth() / 4;
+    driveKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
+    postGainKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
+    mixKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
+    typeComboBox.setBounds(bounds.reduced(5));
 }

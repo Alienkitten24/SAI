@@ -13,6 +13,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     auto gainGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
         GroupIDs::Gain, "Gain", "|"
     );
+        gainGroup->addChild(std::make_unique<juce::AudioParameterBool>(
+            ParamIDs::Gain::Active, "Active", false
+        ));
         gainGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Gain::Gain, "Gain", -60.0f, 0.0f, -6.0f
         ));
@@ -33,6 +36,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
         // TODO i think this has usuable vales from 0-1 rn and 1-100 is the same
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Distortion::Mix, "Mix", 0.0f, 40.0f, 10.0f
+        ));
+        distortionGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+            ParamIDs::Distortion::Type, "Type", juce::StringArray { "Soft Clip", "Hard Clip" }, 0
         ));
     
     params.push_back(std::move(gainGroup));

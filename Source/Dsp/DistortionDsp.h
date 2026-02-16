@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include <memory>
+#include <cmath>
 #include "../Model/DistortionParams.h"
 
 
@@ -14,8 +15,6 @@ public:
     void prepare(const juce::dsp::ProcessSpec& spec);
     void process(const juce::dsp::ProcessContextReplacing<float>& context); 
     void reset();
-
-    void setDriveGain(float gainDb);
 
     void update(const DistortionParams& p);
 
@@ -31,6 +30,8 @@ private:
     // asymetry/bias
     // threshold
 
+    void setWaveshaper(int type);
+
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
 
     juce::dsp::Gain<float> driveGain;
@@ -38,6 +39,7 @@ private:
 
     // juce::dsp::Bias<float> asymmetry;
 
+    int lastType = -1;
     juce::dsp::WaveShaper<float> waveshaper;
 
     // TODO decide to name all dryWet or Mix

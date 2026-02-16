@@ -30,6 +30,7 @@ target_sources(test PRIVATE
     Source/Model/SensorData.h
     Source/Model/EffectsTreeState.h
     Source/Model/EffectsTreeState.cpp
+    Source/Model/GainParams.h
     Source/Model/DistortionParams.h
     
     # --- DSP ----------------------------------------

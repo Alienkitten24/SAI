@@ -23,6 +23,12 @@ void GainComponent::createParameterControls()
 
 void GainComponent::linkAttachments()
 {
+    if (!activeAttachment) 
+    {
+        activeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
+            treeState, ParamIDs::Gain::Active, activeButton
+        );
+    }
     if (!gainAttachment)
     {
         gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
@@ -35,5 +41,5 @@ void GainComponent::layoutMainContent()
 {
     auto bounds = getLocalBounds();
     bounds.removeFromTop(TITLE_BAR_HEIGHT);
-    gainKnob.setBounds(getLocalBounds());
+    gainKnob.setBounds(bounds.reduced(5));
 }

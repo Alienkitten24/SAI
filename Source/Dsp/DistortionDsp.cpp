@@ -28,13 +28,8 @@ void DistortionDsp::prepare(const juce::dsp::ProcessSpec& spec)
 
     postGain.prepare(spec);
 
-    waveshaper.functionToUse = [] (float x) { 
-        return std::tanh(x); 
-        // return std::tanh(x*drive + asymmetry); 
-
-        // hard clipping
-        // return juce::jlimit(-1.0f, 1.0f, x);
-    };
+    // set initial selection to SOFTCLIP
+    setWaveshaper(DistortionType::SOFTCLIP);
 
     dryWet.prepare(spec);
     dryWet.setMixingRule(juce::dsp::DryWetMixingRule::linear); // idk
@@ -71,14 +66,38 @@ void DistortionDsp::reset()
 {
 }
 
-void DistortionDsp::setDriveGain(float gainDb)
-{
-    driveGain.setGainDecibels(gainDb);
-}
-
 void DistortionDsp::update(const DistortionParams& p)
 {
     driveGain.setGainDecibels(p.drive);
     postGain.setGainDecibels(p.postGain);
     dryWet.setWetMixProportion(p.mix);
+    int type = (int) p.type;
+    if (lastType != type)
+    {
+        setWaveshaper(type)
+    }
+}
+
+void DistortionDsp::setWaveshaper(int type) {
+    switch (type) {
+        case DistortionType::SOFTCLIP :
+            waveshaper.functionToUse = [] (float x) { 
+                return std::tanh(x); 
+            };
+            break;
+        case DistortionType::HARDCLIP :
+            waveshaper.functionToUse = [] (float x) { 
+                return juce::jlimit(-1.0f, 1.0f, x); 
+            };
+            break;
+        // case DistortionType::BITCRUSH :
+        //     waveshaper.functionToUse = [] (float x) {
+        //         float bitDepth = 4.0f;
+        //         float levels = std::pow(2.0f, bitDepth);
+        //         float step = 2.0f / levels;
+        //         return std::round(x / step) * step;
+        //     };
+    }
+
+    lastType = type;
 }

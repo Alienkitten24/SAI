@@ -14,6 +14,7 @@
 #include "Communication/BLEManager.h"
 #include "Model/SensorData.h"
 #include "Model/EffectsTreeState.h"
+#include "Model/GainParams.h"
 #include "Model/DistortionParams.h"
 #include "Dsp/GainDsp.h"
 #include "Dsp/DistortionDsp.h"
@@ -85,15 +86,12 @@ private:
     };
 
     GainDsp gainDsp;
-    std::atomic<float>* gainParam = nullptr;
+    GainParams gainParams;
+    GainParamPointers gainParamPointers;
 
     DistortionDsp distortionDsp;
-    struct {
-      std::atomic<float>* activeParam = nullptr;
-      std::atomic<float>* driveParam = nullptr;
-      std::atomic<float>* postGainParam = nullptr;
-      std::atomic<float>* mixParam = nullptr;
-    } distortionParamsPointers;
+    DistortionParams distortionParams;
+    DistortionParamPointers distortionParamPointers;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)

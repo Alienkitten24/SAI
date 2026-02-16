@@ -28,12 +28,14 @@ TestAudioProcessor::TestAudioProcessor()
     m_bleManager.getReceiver().onMessageReceived = 
         [this](const juce::OSCMessage& message) { onOSCMessageReceived(message); };
 
-    gainParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Gain);
+    gainParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Active);
+    gainParamPointers.gainParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Gain);
 
-    distortionParamsPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Active);
-    distortionParamsPointers.driveParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Drive);
-    distortionParamsPointers.postGainParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::PostGain);
-    distortionParamsPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Mix);
+    distortionParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Active);
+    distortionParamPointers.driveParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Drive);
+    distortionParamPointers.postGainParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::PostGain);
+    distortionParamPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Mix);
+    distortionParamPointers.typeParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Type);
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -332,22 +334,21 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     juce::dsp::AudioBlock<float> block (buffer);
     juce::dsp::ProcessContextReplacing<float> context (block);
 
-    float gainDb = gainParam->load();
-    gainDsp.setGain(gainDb);
+    gainParams.active = gainParamPointers.activeParam->load();
+    gainParams.gain = gainParamPointers.gainParam->load();
+    gainDsp.update(gainParams);
 
-    // TODO actually doesn't this create a new obj every tick
-    DistortionParams distortionParams;
-    distortionParams.active = distortionParamsPointers.activeParam->load();
-    distortionParams.drive = distortionParamsPointers.driveParam->load();
-    distortionParams.postGain = distortionParamsPointers.postGainParam->load();
-    distortionParams.mix = distortionParamsPointers.mixParam->load();
-    // // distortionDsp.setDriveGain(driveGain);
+    distortionParams.active = distortionParamPointers.activeParam->load();
+    distortionParams.drive = distortionParamPointers.driveParam->load();
+    distortionParams.postGain = distortionParamPointers.postGainParam->load();
+    distortionParams.mix = distortionParamPointers.mixParam->load();
+    distortionParams.type = distortionParamPointers.typeParam->load();
     distortionDsp.update(distortionParams);
 
     // each dsp uses the same context but it stacks
     // ex: gainDsp.proc(c); reverbDsp.proc(c) <- this c has gain on it 
     // can use unique contexts for parallel processing (ex wet/dry knob)
-    gainDsp.process(context);
+    if (gainParams.active)            gainDsp.process(context);
     if (distortionParams.active)      distortionDsp.process(context);
 }
 
