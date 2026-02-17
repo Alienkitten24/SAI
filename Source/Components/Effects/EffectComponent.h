@@ -2,34 +2,28 @@
 
 #include <JuceHeader.h>
 #include <memory>
+#include "../../Model/EffectsTreeState.h"
+#include "../Core/TitleBarComponent.h"
+#include "../Core/KnobComponent.h"
 
 class EffectComponent : public juce::Component
 {
 public:
-    EffectComponent(juce::AudioProcessorValueTreeState& state);
+    EffectComponent(juce::AudioProcessorValueTreeState& treeState, const juce::String& activeParamID);
     virtual ~EffectComponent();
 
     void paint(juce::Graphics& g) override;
     void resized() override;
 
     virtual void createParameterControls() = 0;
-    virtual void linkAttachments() = 0;
-    virtual void layoutMainContent() = 0;
+    virtual void layoutMainContent(juce::Rectangle<int> bounds) = 0;
 
-    void setEffectName(const juce::String& name);
 
 protected:
-    static constexpr int TITLE_BAR_HEIGHT = 40;
+    void setEffectName(const juce::String& name);
 
     juce::AudioProcessorValueTreeState& treeState;
-
-    juce::String effectName;
-    juce::Label nameLabel;
-
-    juce::ToggleButton activeButton;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> activeAttachment;
-
-
+    TitleBarComponent titleBar;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectComponent)
 };

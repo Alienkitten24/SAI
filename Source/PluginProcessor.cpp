@@ -348,6 +348,7 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     // each dsp uses the same context but it stacks
     // ex: gainDsp.proc(c); reverbDsp.proc(c) <- this c has gain on it 
     // can use unique contexts for parallel processing (ex wet/dry knob)
+    // TODO rn this is all sequential -> unintended effect gainParam is change Distortion's drive
     if (gainParams.active)            gainDsp.process(context);
     if (distortionParams.active)      distortionDsp.process(context);
 }

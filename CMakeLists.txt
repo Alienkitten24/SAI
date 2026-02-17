@@ -65,6 +65,12 @@ target_sources(test PRIVATE
     Source/Components/Effects/GainComponent.cpp
     Source/Components/Effects/DistortionComponent.h
     Source/Components/Effects/DistortionComponent.cpp
+
+    # --- CORE --- 
+    Source/Components/Core/TitleBarComponent.h
+    Source/Components/Core/TitleBarComponent.cpp
+    Source/Components/Core/KnobComponent.h
+    Source/Components/Core/KnobComponent.cpp
     
     # --- NAVIGATION ---
     Source/Components/Navigation/NavBar.h

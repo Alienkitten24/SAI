@@ -3,28 +3,23 @@
 #include <JuceHeader.h>
 #include <memory>
 #include "EffectComponent.h"
-#include "../../Model/EffectsTreeState.h"
+
 
 class DistortionComponent : public EffectComponent
 {
 public:
-    DistortionComponent(juce::AudioProcessorValueTreeState& state);
+    DistortionComponent(juce::AudioProcessorValueTreeState& treeState);
     ~DistortionComponent();
 
     void createParameterControls() override;
-    void layoutMainContent() override;
+    void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:
     void linkAttachments();
 
-    juce::Slider driveKnob;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> driveAttachment;
-
-    juce::Slider postGainKnob;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> postGainAttachment;
-
-    juce::Slider mixKnob;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mixAttachment;
+    KnobComponent driveKnob { "Drive", treeState, ParamIDs::Distortion::Drive };
+    KnobComponent postGainKnob { "Post Gain", treeState, ParamIDs::Distortion::PostGain };
+    KnobComponent mixKnob { "Mix", treeState, ParamIDs::Distortion::Mix };
 
     juce::ComboBox typeComboBox;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> typeAttachment;

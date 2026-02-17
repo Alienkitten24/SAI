@@ -74,7 +74,7 @@ void DistortionDsp::update(const DistortionParams& p)
     int type = (int) p.type;
     if (lastType != type)
     {
-        setWaveshaper(type)
+        setWaveshaper(type);
     }
 }
 
@@ -83,6 +83,8 @@ void DistortionDsp::setWaveshaper(int type) {
         case DistortionType::SOFTCLIP :
             waveshaper.functionToUse = [] (float x) { 
                 return std::tanh(x); 
+                // TODO consider using an approximation formula
+                // or juce::dsp::FastMathApproximations::tanh
             };
             break;
         case DistortionType::HARDCLIP :

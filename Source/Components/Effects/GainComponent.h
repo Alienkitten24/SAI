@@ -2,23 +2,19 @@
 
 #include <JuceHeader.h>
 #include <memory>
-#include "../../Model/EffectsTreeState.h"
 #include "EffectComponent.h"
 
 class GainComponent : public EffectComponent
 {
 public:
-    GainComponent (juce::AudioProcessorValueTreeState& state);
-    ~GainComponent ();
+    GainComponent(juce::AudioProcessorValueTreeState& treeState);
+    ~GainComponent();
 
     void createParameterControls() override;
-    void layoutMainContent() override;
-    void linkAttachments() override;
+    void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:
-
-    juce::Slider gainKnob;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
+    KnobComponent gainKnob { "Gain", treeState, ParamIDs::Gain::Gain };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GainComponent)
 };

@@ -35,7 +35,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
         ));
         // TODO i think this has usuable vales from 0-1 rn and 1-100 is the same
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Distortion::Mix, "Mix", 0.0f, 40.0f, 10.0f
+            ParamIDs::Distortion::Mix, "Mix", 0.0f, 1.0f, 0.1f
         ));
         distortionGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
             ParamIDs::Distortion::Type, "Type", juce::StringArray { "Soft Clip", "Hard Clip" }, 0
