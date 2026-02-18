@@ -36,6 +36,11 @@ TestAudioProcessor::TestAudioProcessor()
     distortionParamPointers.postGainParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::PostGain);
     distortionParamPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Mix);
     distortionParamPointers.typeParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Type);
+
+    delayParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Active);
+    delayParamPointers.delayMsParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMs);
+    delayParamPointers.feedbackParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Feedback);
+    delayParamPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Mix);
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -267,6 +272,7 @@ void TestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 
     gainDsp.prepare(spec);
     distortionDsp.prepare(spec);
+    delayDsp.prepare(spec);
 }
 
 void TestAudioProcessor::releaseResources()
@@ -345,12 +351,19 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     distortionParams.type = distortionParamPointers.typeParam->load();
     distortionDsp.update(distortionParams);
 
+    delayParams.active = delayParamPointers.activeParam->load();
+    delayParams.delayMs = delayParamPointers.delayMsParam->load();
+    delayParams.feedback = delayParamPointers.feedbackParam->load();
+    delayParams.mix = delayParamPointers.mixParam->load();
+    delayDsp.update(delayParams);
+
     // each dsp uses the same context but it stacks
     // ex: gainDsp.proc(c); reverbDsp.proc(c) <- this c has gain on it 
     // can use unique contexts for parallel processing (ex wet/dry knob)
     // TODO rn this is all sequential -> unintended effect gainParam is change Distortion's drive
     if (gainParams.active)            gainDsp.process(context);
     if (distortionParams.active)      distortionDsp.process(context);
+    if (delayParams.active)           delayDsp.process(context);
 }
 
 //==============================================================================

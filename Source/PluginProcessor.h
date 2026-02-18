@@ -12,12 +12,17 @@
 #include <memory>
 
 #include "Communication/BLEManager.h"
+
 #include "Model/SensorData.h"
 #include "Model/EffectsTreeState.h"
+
 #include "Model/GainParams.h"
 #include "Model/DistortionParams.h"
+#include "Model/DelayParams.h"
+
 #include "Dsp/GainDsp.h"
 #include "Dsp/DistortionDsp.h"
+#include "Dsp/DelayDsp.h"
 
 //==============================================================================
 /**
@@ -92,6 +97,10 @@ private:
     DistortionDsp distortionDsp;
     DistortionParams distortionParams;
     DistortionParamPointers distortionParamPointers;
+
+    DelayDsp delayDsp;
+    DelayParams delayParams;
+    DelayParamPointers delayParamPointers;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)

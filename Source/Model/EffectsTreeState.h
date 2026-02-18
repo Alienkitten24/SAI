@@ -6,9 +6,9 @@
 juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout(); 
 
 namespace GroupIDs {
-    // inline const juce::String Gain { "gain" };
     inline constexpr auto Gain = "gain";
     inline constexpr auto Distortion = "dist";
+    inline constexpr auto Delay = "delay";
 };
 
 namespace ParamIDs {
@@ -22,6 +22,13 @@ namespace ParamIDs {
         inline constexpr auto PostGain = "dist_postGain";
         inline constexpr auto Mix = "dist_mix";
         inline constexpr auto Type = "dist_type";
+    };
+    namespace Delay {
+        inline constexpr auto Active = "delay_active";
+        inline constexpr auto DelayMs = "delay_delayMs";
+        inline constexpr auto Feedback = "delay_feedback";
+        inline constexpr auto Mix = "delay_mix";
+        // inline constexpr auto Type = "delay_type";
     };
 };
 

@@ -32,12 +32,15 @@ target_sources(test PRIVATE
     Source/Model/EffectsTreeState.cpp
     Source/Model/GainParams.h
     Source/Model/DistortionParams.h
+    Source/Model/DelayParams.h
     
     # --- DSP ----------------------------------------
     Source/Dsp/GainDsp.h
     Source/Dsp/GainDsp.cpp
     Source/Dsp/DistortionDsp.h
     Source/Dsp/DistortionDsp.cpp
+    Source/Dsp/DelayDsp.h
+    Source/Dsp/DelayDsp.cpp
 
     # --- COMMUNICATION ------------------------------
     Source/Communication/BLEClient.h
@@ -65,6 +68,8 @@ target_sources(test PRIVATE
     Source/Components/Effects/GainComponent.cpp
     Source/Components/Effects/DistortionComponent.h
     Source/Components/Effects/DistortionComponent.cpp
+    Source/Components/Effects/DelayComponent.h
+    Source/Components/Effects/DelayComponent.cpp
 
     # --- CORE --- 
     Source/Components/Core/TitleBarComponent.h

@@ -3,13 +3,15 @@
 EffectsView::EffectsView (TestAudioProcessor& p)
     : audioProcessor (p), 
     gainComponent (p.getTreeState()),
-    distortionComponent (p.getTreeState())
+    distortionComponent (p.getTreeState()),
+    delayComponent (p.getTreeState())
 {   
     // addAndMakeVisible(label);
     // label.setText("Effects view", juce::dontSendNotification);
 
     addAndMakeVisible(gainComponent);
     addAndMakeVisible(distortionComponent);
+    addAndMakeVisible(delayComponent);
 }
 
 EffectsView::~EffectsView()
@@ -24,8 +26,10 @@ void EffectsView::paint(juce::Graphics& g)
 
 void EffectsView::resized()
 {
-    // label.setBounds(10, 10, getWidth() - 20, 30);
-    int componentHeight = getHeight() / 2;
-    gainComponent.setBounds(10, 10, getWidth() - 20, componentHeight - 20);
-    distortionComponent.setBounds(10, componentHeight + 10, getWidth() - 20, componentHeight - 20);
+    auto bounds = getLocalBounds();
+    auto componentHeight = bounds.getHeight() / 3;
+
+    gainComponent.setBounds(bounds.removeFromTop(componentHeight));
+    distortionComponent.setBounds(bounds.removeFromTop(componentHeight));
+    delayComponent.setBounds(bounds);
 }

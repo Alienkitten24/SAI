@@ -27,13 +27,18 @@ void TitleBarComponent::paint(juce::Graphics& g)
 
 void TitleBarComponent::resized()
 {
-    // TODO spacing needs to be fixed
     auto bounds = getLocalBounds();
     
-    // Active button on the left
-    activeButton.setBounds(bounds.removeFromLeft(50).reduced(4));
+    activeButton.setBounds(bounds.removeFromLeft(50).reduced(5));
     
-    // Name label centered in remaining title bar space
-    label.setBounds(bounds);
+    // TODO prolly wanna remove the hardcoded numbers
+    auto labelWidth = 200;
+    auto labelHeight = 40;
+    label.setBounds(
+        (getWidth() - labelWidth) / 2,   // x position
+        (getHeight() - labelHeight) / 2, // y position
+        labelWidth,
+        labelHeight
+    );
     label.setJustificationType(juce::Justification::centred);
 }

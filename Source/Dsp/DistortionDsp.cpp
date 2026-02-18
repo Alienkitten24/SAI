@@ -41,6 +41,7 @@ void DistortionDsp::prepare(const juce::dsp::ProcessSpec& spec)
 
 void DistortionDsp::process(const juce::dsp::ProcessContextReplacing<float>& context)
 {
+    // TODO since this is replacing dont need two blocks... maybe
     juce::dsp::AudioBlock inputBlock  = context.getInputBlock();
     juce::dsp::AudioBlock outputBlock = context.getOutputBlock();
 

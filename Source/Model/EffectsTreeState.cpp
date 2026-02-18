@@ -33,16 +33,32 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Distortion::PostGain, "Post Gain", -60.0f, 0.0f, -6.0f
         ));
-        // TODO i think this has usuable vales from 0-1 rn and 1-100 is the same
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Distortion::Mix, "Mix", 0.0f, 1.0f, 0.1f
         ));
         distortionGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
             ParamIDs::Distortion::Type, "Type", juce::StringArray { "Soft Clip", "Hard Clip" }, 0
         ));
+
+    auto delayGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
+        GroupIDs::Delay, "Delay", "|"
+    );
+        delayGroup->addChild(std::make_unique<juce::AudioParameterBool>(
+            ParamIDs::Delay::Active, "Active", false 
+        ));
+        delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Delay::DelayMs, "Delay Ms", 0.0f, 1000.0f, 0.1f 
+        ));
+        delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Delay::Feedback, "Feedback", 0.0f, 1.0f, 0.1f 
+        ));
+        delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Delay::Mix, "Mix", 0.0f, 1.0f, 0.1f 
+        ));
     
     params.push_back(std::move(gainGroup));
     params.push_back(std::move(distortionGroup));
+    params.push_back(std::move(delayGroup));
 
     return { params.begin(), params.end() };
 }

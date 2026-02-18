@@ -16,7 +16,7 @@ TestAudioProcessorEditor::TestAudioProcessorEditor (TestAudioProcessor& p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (600, 450);
+    setSize (800, 600);
     setResizable (true, false);
 
     addAndMakeVisible(m_navBar);
@@ -45,15 +45,15 @@ void TestAudioProcessorEditor::paint (juce::Graphics& g)
 
 void TestAudioProcessorEditor::resized()
 {
-    auto area = getLocalBounds();
+    auto bounds = getLocalBounds();
         
     // Navigation bar takes 10% of the top
-    m_navBar.setBounds(area.removeFromTop(area.getHeight() * 0.1f));
+    m_navBar.setBounds(bounds.removeFromTop(bounds.getHeight() * 0.1f));
     
     // Remaining area is for the screens (they all occupy the same space)
-    m_effectsView.setBounds(area);
-    m_matrixView.setBounds(area);
-    m_advancedView.setBounds(area);
+    m_effectsView.setBounds(bounds);
+    m_matrixView.setBounds(bounds);
+    m_advancedView.setBounds(bounds);
 }
 
 void TestAudioProcessorEditor::changeScreen(int screen_id)
