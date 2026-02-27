@@ -5,6 +5,7 @@
 #include "../../Model/EffectsTreeState.h"
 #include "../Core/TitleBarComponent.h"
 #include "../Core/KnobComponent.h"
+#include "../Core/ComboBoxComponent.h"
 
 class EffectComponent : public juce::Component
 {

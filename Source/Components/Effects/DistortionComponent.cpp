@@ -18,22 +18,7 @@ void DistortionComponent::createParameterControls()
     addAndMakeVisible(driveKnob);
     addAndMakeVisible(postGainKnob);
     addAndMakeVisible(mixKnob);
-
-    typeComboBox.addItem("Soft Clip", 1);
-    typeComboBox.addItem("Hard Clip", 2);
     addAndMakeVisible(typeComboBox);
-
-    linkAttachments();
-}
-
-void DistortionComponent::linkAttachments()
-{
-    if (!typeAttachment)
-    {
-        typeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(
-            treeState, ParamIDs::Distortion::Type, typeComboBox
-        );
-    }
 }
 
 void DistortionComponent::layoutMainContent(juce::Rectangle<int> bounds)

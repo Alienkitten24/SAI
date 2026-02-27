@@ -25,10 +25,11 @@ namespace ParamIDs {
     };
     namespace Delay {
         inline constexpr auto Active = "delay_active";
-        inline constexpr auto DelayMs = "delay_delayMs";
+        inline constexpr auto DelayMsL = "delay_delayMsL";
+        inline constexpr auto DelayMsR = "delay_delayMsR";
         inline constexpr auto Feedback = "delay_feedback";
         inline constexpr auto Mix = "delay_mix";
-        // inline constexpr auto Type = "delay_type";
+        inline constexpr auto Type = "delay_type";
     };
 };
 

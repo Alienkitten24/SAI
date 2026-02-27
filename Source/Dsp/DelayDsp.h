@@ -26,10 +26,19 @@ private:
     // type: mono, stereo, pingpong
     // maybe: pitch modulation, pan, slight distortion
 
-    juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> delayLine;
+    void processMono(juce::dsp::ProcessContextReplacing<float>& context);
+    void processStereo(juce::dsp::ProcessContextReplacing<float>& context);
+    void processPingPong(juce::dsp::ProcessContextReplacing<float>& context);
+
+    void setDelayType(int type);
+
+    juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> delayLineL;
+    juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> delayLineR;
 
     double sampleRate;
     float feedback; 
+    int delayType = DelayType::MONO;
+    int lastType = DelayType::MONO;
 
     juce::dsp::DryWetMixer<float> dryWet;
 

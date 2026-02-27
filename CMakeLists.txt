@@ -20,7 +20,7 @@ juce_add_plugin(test
 juce_generate_juce_header(test)
 
 target_sources(test PRIVATE
-    # --- CORE ---------------------------------------
+    # --- BASE ---------------------------------------
     Source/PluginProcessor.h
     Source/PluginProcessor.cpp
     Source/PluginEditor.h
@@ -76,6 +76,8 @@ target_sources(test PRIVATE
     Source/Components/Core/TitleBarComponent.cpp
     Source/Components/Core/KnobComponent.h
     Source/Components/Core/KnobComponent.cpp
+    Source/Components/Core/ComboBoxComponent.h
+    Source/Components/Core/ComboBoxComponent.cpp
     
     # --- NAVIGATION ---
     Source/Components/Navigation/NavBar.h

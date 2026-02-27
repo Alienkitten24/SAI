@@ -16,9 +16,12 @@ public:
 
 private:
 
-    KnobComponent delayMsKnob { "Delay Ms", treeState, ParamIDs::Delay::DelayMs };
+    KnobComponent delayMsLKnob { "Delay Ms L", treeState, ParamIDs::Delay::DelayMsL };
+    KnobComponent delayMsRKnob { "Delay Ms R", treeState, ParamIDs::Delay::DelayMsR };
     KnobComponent feedbackKnob { "Feedback", treeState, ParamIDs::Delay::Feedback };
     KnobComponent mixKnob { "Mix", treeState, ParamIDs::Delay::Mix };
+
+    ComboBoxComponent typeComboBox { treeState, ParamIDs::Delay::Type };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DelayComponent)
 };

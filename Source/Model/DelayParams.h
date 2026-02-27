@@ -5,17 +5,21 @@
 
 struct DelayParams {
     bool active;
-    float delayMs;
+    float delayMsL;
+    float delayMsR;
     float feedback;
     float mix;
+    int type; 
     // bool bpmSync;
 };
 
 struct DelayParamPointers {
     std::atomic<float>* activeParam = nullptr;
-    std::atomic<float>* delayMsParam = nullptr;
+    std::atomic<float>* delayMsLParam = nullptr;
+    std::atomic<float>* delayMsRParam = nullptr;
     std::atomic<float>* feedbackParam = nullptr;
     std::atomic<float>* mixParam = nullptr;
+    std::atomic<float>* typeParam = nullptr;
 };
 
 enum DelayType {

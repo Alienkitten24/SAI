@@ -17,3 +17,13 @@ struct SensorData {
     float ez = 0.0f;
     float mic_rms = 0.0f;
 };
+
+// enum OscID {
+//     TIME = 0,
+//     PROXIMITY = 1,
+//     GESTURE = 2, 
+//     ACCELERATION = 3,
+//     GYRO = 4, 
+//     EULER = 5,
+//     MIC = 6
+// };

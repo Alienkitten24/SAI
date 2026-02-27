@@ -15,14 +15,11 @@ public:
     void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:
-    void linkAttachments();
-
     KnobComponent driveKnob { "Drive", treeState, ParamIDs::Distortion::Drive };
     KnobComponent postGainKnob { "Post Gain", treeState, ParamIDs::Distortion::PostGain };
     KnobComponent mixKnob { "Mix", treeState, ParamIDs::Distortion::Mix };
 
-    juce::ComboBox typeComboBox;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> typeAttachment;
+    ComboBoxComponent typeComboBox { treeState, ParamIDs::Distortion::Type };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionComponent)
 };

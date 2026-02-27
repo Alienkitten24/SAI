@@ -39,10 +39,9 @@ private:
 
     // juce::dsp::Bias<float> asymmetry;
 
-    int lastType = -1;
+    int lastType = DistortionType::SOFTCLIP;
     juce::dsp::WaveShaper<float> waveshaper;
 
-    // TODO decide to name all dryWet or Mix
     juce::dsp::DryWetMixer<float> dryWet;
 
     // juce::SmoothedValue<float> driveSmoothed;

@@ -38,9 +38,11 @@ TestAudioProcessor::TestAudioProcessor()
     distortionParamPointers.typeParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Type);
 
     delayParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Active);
-    delayParamPointers.delayMsParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMs);
+    delayParamPointers.delayMsLParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMsL);
+    delayParamPointers.delayMsRParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMsR);
     delayParamPointers.feedbackParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Feedback);
     delayParamPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Mix);
+    delayParamPointers.typeParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Type);
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -322,20 +324,7 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
 
-    // float gain = *m_treeState.getRawParameterValue(EffectsTreeState::paramNames::Gain);
-    // for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    // {
-    //     auto* channelData = buffer.getWritePointer (channel);
-    //     // ..do something to the data...
-    //     buffer.applyGain(channel, 0, buffer.getNumSamples(), gain);
-    // }
 
     juce::dsp::AudioBlock<float> block (buffer);
     juce::dsp::ProcessContextReplacing<float> context (block);
@@ -352,9 +341,11 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     distortionDsp.update(distortionParams);
 
     delayParams.active = delayParamPointers.activeParam->load();
-    delayParams.delayMs = delayParamPointers.delayMsParam->load();
+    delayParams.delayMsL = delayParamPointers.delayMsLParam->load();
+    delayParams.delayMsR = delayParamPointers.delayMsRParam->load();
     delayParams.feedback = delayParamPointers.feedbackParam->load();
     delayParams.mix = delayParamPointers.mixParam->load();
+    delayParams.type = delayParamPointers.typeParam->load();
     delayDsp.update(delayParams);
 
     // each dsp uses the same context but it stacks

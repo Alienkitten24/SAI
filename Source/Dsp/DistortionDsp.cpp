@@ -72,7 +72,7 @@ void DistortionDsp::update(const DistortionParams& p)
     driveGain.setGainDecibels(p.drive);
     postGain.setGainDecibels(p.postGain);
     dryWet.setWetMixProportion(p.mix);
-    int type = (int) p.type;
+    int type = p.type;
     if (lastType != type)
     {
         setWaveshaper(type);
@@ -93,13 +93,14 @@ void DistortionDsp::setWaveshaper(int type) {
                 return juce::jlimit(-1.0f, 1.0f, x); 
             };
             break;
-        // case DistortionType::BITCRUSH :
-        //     waveshaper.functionToUse = [] (float x) {
-        //         float bitDepth = 4.0f;
-        //         float levels = std::pow(2.0f, bitDepth);
-        //         float step = 2.0f / levels;
-        //         return std::round(x / step) * step;
-        //     };
+        case DistortionType::BITCRUSH :
+            waveshaper.functionToUse = [] (float x) {
+                // TODO should be able to vary bitdepth
+                float bitDepth = 4.0f;
+                float levels = std::pow(2.0f, bitDepth);
+                return std::round(x * levels) / levels;
+            };
+            break;
     }
 
     lastType = type;

@@ -36,8 +36,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Distortion::Mix, "Mix", 0.0f, 1.0f, 0.1f
         ));
+        // TODO maybe move this stringarray declaration 
         distortionGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
-            ParamIDs::Distortion::Type, "Type", juce::StringArray { "Soft Clip", "Hard Clip" }, 0
+            ParamIDs::Distortion::Type, "Type", juce::StringArray { "Soft Clip", "Hard Clip", "Bit Crush" }, 0
         ));
 
     auto delayGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
@@ -47,13 +48,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Delay::Active, "Active", false 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Delay::DelayMs, "Delay Ms", 0.0f, 1000.0f, 0.1f 
+            ParamIDs::Delay::DelayMsL, "Delay Ms L", 0.0f, 1000.0f, 250.0f 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Delay::Feedback, "Feedback", 0.0f, 1.0f, 0.1f 
+            ParamIDs::Delay::DelayMsR, "Delay Ms R", 0.0f, 1000.0f, 250.0f 
+        ));
+        delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Delay::Feedback, "Feedback", 0.0f, 1.0f, 0.7f 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Delay::Mix, "Mix", 0.0f, 1.0f, 0.1f 
+        ));
+        delayGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+            ParamIDs::Delay::Type, "Type", juce::StringArray { "Mono", "Stereo", "Ping Pong" }, 0
         ));
     
     params.push_back(std::move(gainGroup));
