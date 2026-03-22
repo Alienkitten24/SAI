@@ -15,11 +15,13 @@ DelayComponent::~DelayComponent()
 
 void DelayComponent::createParameterControls()
 {
+    // addAndMakeVisible(delayKnob);
     addAndMakeVisible(delayMsLKnob);
     addAndMakeVisible(delayMsRKnob);
     addAndMakeVisible(feedbackKnob);
     addAndMakeVisible(mixKnob);
-    addAndMakeVisible(typeComboBox);
+    addAndMakeVisible(delayTypeComboBox);
+    // addAndMakeVisible(tempoTypeComboBox);
 }
 
 void DelayComponent::layoutMainContent(juce::Rectangle<int> bounds)
@@ -29,5 +31,6 @@ void DelayComponent::layoutMainContent(juce::Rectangle<int> bounds)
     delayMsRKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
     feedbackKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
     mixKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
-    typeComboBox.setBounds(bounds.reduced(5));
+    delayTypeComboBox.setBounds(bounds.reduced(5));
+    // tempoTypeComboBox.setBounds(bounds.reduced(5));
 }

@@ -5,21 +5,24 @@
 
 struct DelayParams {
     bool active;
-    float delayMsL;
-    float delayMsR;
     float feedback;
     float mix;
-    int type; 
-    // bool bpmSync;
+    float delayMsL;
+    float delayMsR;
+    int delayType; 
+    int tempoType;
+    int division;
 };
 
 struct DelayParamPointers {
     std::atomic<float>* activeParam = nullptr;
-    std::atomic<float>* delayMsLParam = nullptr;
-    std::atomic<float>* delayMsRParam = nullptr;
     std::atomic<float>* feedbackParam = nullptr;
     std::atomic<float>* mixParam = nullptr;
-    std::atomic<float>* typeParam = nullptr;
+    std::atomic<float>* delayMsLParam = nullptr;
+    std::atomic<float>* delayMsRParam = nullptr;
+    std::atomic<float>* delayTypeParam = nullptr;
+    std::atomic<float>* tempoTypeParam = nullptr;
+    std::atomic<float>* divisionParam = nullptr;
 };
 
 enum DelayType {
@@ -28,11 +31,21 @@ enum DelayType {
     PINGPONG = 2
 };
 
-// enum DelayLength {
-//     WHOLE
-//     HALF
-//     QUARTER
-//     EIGHTH
-//     SIXTEENTH
-//     DOTTED ?
+// enum TempoType {
+//     MILLISECONDS = 0,
+//     STRAIGHT = 1,
+//     DOTTED = 2,
+//     TRIPLET = 3
+// }
+
+// enum Division {
+//     SIXTYFOURTH = 0,
+//     THIRTYSECOND = 1,
+//     SIXTEENTH = 2,
+//     EIGHTH = 3,
+//     QUARTER = 4,
+//     HALF = 5,
+//     WHOLE = 6
+//     // DOUBLEWHOLE
+//     // QUADWHOLE
 // }

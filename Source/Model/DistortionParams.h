@@ -28,5 +28,3 @@ enum DistortionType {
     HARDCLIP = 1,
     BITCRUSH = 2
 };
-
-// void updateParams(params, paramPointers)

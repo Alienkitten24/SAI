@@ -90,6 +90,8 @@ private:
       *this, nullptr, "PARAMETERS", createParameterLayout()
     };
 
+    // EffectComponent* order; so that we can change the position of fx in the chain  
+
     GainDsp gainDsp;
     GainParams gainParams;
     GainParamPointers gainParamPointers;

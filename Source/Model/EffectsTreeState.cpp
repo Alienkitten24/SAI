@@ -48,24 +48,56 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Delay::Active, "Active", false 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Delay::DelayMsL, "Delay Ms L", 0.0f, 1000.0f, 250.0f 
-        ));
-        delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Delay::DelayMsR, "Delay Ms R", 0.0f, 1000.0f, 250.0f 
-        ));
-        delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Delay::Feedback, "Feedback", 0.0f, 1.0f, 0.7f 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Delay::Mix, "Mix", 0.0f, 1.0f, 0.1f 
         ));
+        delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Delay::DelayMsL, "Delay Ms L", 0.0f, 1000.0f, 250.0f 
+        ));
+        delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Delay::DelayMsR, "Delay Ms R", 0.0f, 1000.0f, 250.0f 
+        ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
-            ParamIDs::Delay::Type, "Type", juce::StringArray { "Mono", "Stereo", "Ping Pong" }, 0
+            ParamIDs::Delay::DelayType, "Delay Type", juce::StringArray { "Mono", "Stereo", "Ping Pong" }, 0
+        ));
+        // delayGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+        //     ParamIDs::Delay::TempoType, "Tempo Type", juce::StringArray { "Milliseconds", "Tempo Straight", "Tempo Dotted", "Tempo Triplet" }, 0
+        // ));
+        // delayGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+        //     ParamIDs::Delay::Division, "Division", juce::StringArray { "1/64", "1/32", "1/16", "1/8", "1/4", "1/2", "1/1" }, 0
+        // ));
+
+    auto filterGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
+        GroupIDs::Filter, "Filter", "|"
+    );
+        filterGroup->addChild(std::make_unique<juce::AudioParameterBool>(
+            ParamIDs::Filter::Active, "Active", false 
+        ));
+        filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Filter::Mix, "Mix", 0.0f, 1.0f, 0.1f 
+        ));
+        filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Filter::Cutoff, "Cutoff", 0.0f, 1.0f, 0.1f 
+        ));
+        filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Filter::Resonance, "Resonance", 0.0f, 1.0f, 0.1f 
+        ));
+        filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Filter::Drive, "Drive", 0.0f, 1.0f, 0.1f 
+        ));
+        filterGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+            ParamIDs::Filter::Slope, "Slope", juce::StringArray { "12 dB", "24 dB" }, 0
+        ));
+        filterGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+            ParamIDs::Filter::BandType, "Band Type", juce::StringArray { "Low Pass", "High Pass", "Band Pass" }, 0
         ));
     
     params.push_back(std::move(gainGroup));
     params.push_back(std::move(distortionGroup));
     params.push_back(std::move(delayGroup));
+    params.push_back(std::move(filterGroup));
 
     return { params.begin(), params.end() };
 }

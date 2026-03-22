@@ -38,11 +38,11 @@ TestAudioProcessor::TestAudioProcessor()
     distortionParamPointers.typeParam = m_treeState.getRawParameterValue(ParamIDs::Distortion::Type);
 
     delayParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Active);
-    delayParamPointers.delayMsLParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMsL);
-    delayParamPointers.delayMsRParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMsR);
     delayParamPointers.feedbackParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Feedback);
     delayParamPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Mix);
-    delayParamPointers.typeParam = m_treeState.getRawParameterValue(ParamIDs::Delay::Type);
+    delayParamPointers.delayMsLParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMsL);
+    delayParamPointers.delayMsRParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMsR);
+    delayParamPointers.delayTypeParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayType);
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -341,11 +341,11 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     distortionDsp.update(distortionParams);
 
     delayParams.active = delayParamPointers.activeParam->load();
-    delayParams.delayMsL = delayParamPointers.delayMsLParam->load();
-    delayParams.delayMsR = delayParamPointers.delayMsRParam->load();
     delayParams.feedback = delayParamPointers.feedbackParam->load();
     delayParams.mix = delayParamPointers.mixParam->load();
-    delayParams.type = delayParamPointers.typeParam->load();
+    delayParams.delayMsL = delayParamPointers.delayMsLParam->load();
+    delayParams.delayMsR = delayParamPointers.delayMsRParam->load();
+    delayParams.delayType = delayParamPointers.delayTypeParam->load();
     delayDsp.update(delayParams);
 
     // each dsp uses the same context but it stacks

@@ -65,7 +65,8 @@ void BLEManager::runLoop()
     while (m_running) {
         try {
             SimpleBLE::ByteArray raw = m_client.fetch();
-            std::vector<uint8_t> msg(raw.begin(), raw.end());
+            // TODO this cast does nothing, prolly just make the ByteArray a vector<uint8_t> 
+            std::vector<uint8_t> msg = std::vector<uint8_t>(raw.begin(), raw.end());
             m_bridge.forward(msg);
             // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }

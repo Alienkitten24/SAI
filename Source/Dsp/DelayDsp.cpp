@@ -14,16 +14,16 @@ void DelayDsp::prepare(const juce::dsp::ProcessSpec& spec)
     
     delayLineL.reset();
     delayLineL.prepare(spec);
-    delayLineL.setMaximumDelayInSamples(sampleRate * 4); // 4 seconds max
+    delayLineL.setMaximumDelayInSamples(sampleRate * 4.0); // 4 seconds max
     delayLineL.setDelay(0.0f);
 
     delayLineR.reset();
     delayLineR.prepare(spec);
-    delayLineR.setMaximumDelayInSamples(sampleRate * 4); // 4 seconds max
+    delayLineR.setMaximumDelayInSamples(sampleRate * 4.0); // 4 seconds max
     delayLineR.setDelay(0.0f);
 
     delayType = DelayType::MONO;
-    lastType = DelayType::MONO;
+    lastDelayType = DelayType::MONO;
     
     dryWet.prepare(spec);
     dryWet.setMixingRule(juce::dsp::DryWetMixingRule::linear); // idk
@@ -71,7 +71,6 @@ void DelayDsp::processMono(juce::dsp::ProcessContextReplacing<float>& context)
     auto& outputBlock = context.getOutputBlock();
 
     auto numSamples = outputBlock.getNumSamples();
-    // auto numChannels = outputBlock.getNumChannels();
 
     auto* inputL = inputBlock.getChannelPointer(0); 
     auto* inputR = inputBlock.getChannelPointer(1); 
@@ -83,7 +82,7 @@ void DelayDsp::processMono(juce::dsp::ProcessContextReplacing<float>& context)
     for (size_t i = 0; i < numSamples; ++i)
     {
         auto inputSample = (inputL[i] + inputR[i]) * 0.5f; // sum to mono
-        auto delayedSample = delayLineL.popSample(0); // use channel 0 for everything
+        auto delayedSample = delayLineL.popSample(0); // use Left channel 0 for everything
         delayLineL.pushSample(0, inputSample + feedback * delayedSample);
         outputL[i] = delayedSample; 
         outputR[i] = delayedSample;
@@ -158,6 +157,7 @@ void DelayDsp::processPingPong(juce::dsp::ProcessContextReplacing<float>& contex
 
 void DelayDsp::update(const DelayParams& p)
 {
+    // TODO these floats should be doubles
     float delaySamplesL = p.delayMsR * sampleRate / 1000.0f;
     delayLineL.setDelay(delaySamplesL);
 
@@ -168,11 +168,15 @@ void DelayDsp::update(const DelayParams& p)
 
     dryWet.setWetMixProportion(p.mix);
 
-    int type = p.type;
-    if (lastType != type)
+    if (lastDelayType != p.delayType)
     {
-        setDelayType(type);
+        setDelayType(p.delayType);
     }
+
+    // if (lastTempoType != p.tempoType)
+    // {
+    //     setTempoType(p.tempoType);
+    // }
 }
 
 void DelayDsp::setDelayType(int type) {
@@ -191,5 +195,29 @@ void DelayDsp::setDelayType(int type) {
             break;
     }
 
-    lastType = type;
+    lastDelayType = type;
+    // reset(); for delayLines ???
 }
+
+// void DelayDsp::setTempoType(int type) {
+//     switch (type) {
+//         case TempoType::MILLISECONDS :
+//             tempoType = TempoType::MILLISECONDS;
+//             break;
+//         case TempoType::STRAIGHT :
+//             tempoType = TempoType::STRAIGHT;
+//             break;
+//         case TempoType::DOTTED :
+//             tempoType = TempoType::DOTTED;
+//             break;
+//         case TempoType::TRIPLET :
+//             tempoType = TempoType::TRIPLET;
+//             break;
+//         default:
+//             tempoType = TempoType::MILLISECONDS;
+//             break;
+//     }
+
+//     lastTempoType = type;
+//     // reset(); for delayLines ???
+// }

@@ -31,16 +31,25 @@ private:
     void processPingPong(juce::dsp::ProcessContextReplacing<float>& context);
 
     void setDelayType(int type);
+    // void setTempoType(int type);
+    // void setDivisionType(int type);
+
+    double sampleRate;
+    float feedback; 
+    juce::dsp::DryWetMixer<float> dryWet;
 
     juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> delayLineL;
     juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> delayLineR;
 
-    double sampleRate;
-    float feedback; 
     int delayType = DelayType::MONO;
-    int lastType = DelayType::MONO;
+    int lastDelayType = DelayType::MONO;
 
-    juce::dsp::DryWetMixer<float> dryWet;
+    // int tempoType = TempoType::STRAIGHT;
+    // int lastTempoType = TempoType::STRAIGHT;
+
+    // int division = Division::EIGHTH;
+    // int lastDivisionType = Division::EIGHTH;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DelayDsp)
 };
