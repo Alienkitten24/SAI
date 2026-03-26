@@ -40,8 +40,8 @@ namespace ParamIDs {
         inline constexpr auto Cutoff = "filter_cutoff";
         inline constexpr auto Resonance = "filter_resonance";
         inline constexpr auto Drive = "filter_drive"; 
-        inline constexpr auto Slope = "filter_slope"; 
-        inline constexpr auto BandType = "filter_bandType"; 
+        inline constexpr auto SlopeType = "filter_slopeType"; 
+        inline constexpr auto PassType = "filter_passType"; 
         // inline constexpr auto FilterType = "filter_filterType"; // ladder, svf, iir, fir
     }
 };

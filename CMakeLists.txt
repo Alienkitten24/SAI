@@ -35,6 +35,7 @@ target_sources(test PRIVATE
     Source/Model/GainParams.h
     Source/Model/DistortionParams.h
     Source/Model/DelayParams.h
+    Source/Model/FilterParams.h
     
     # --- DSP ----------------------------------------
     Source/Dsp/GainDsp.h
@@ -43,6 +44,8 @@ target_sources(test PRIVATE
     Source/Dsp/DistortionDsp.cpp
     Source/Dsp/DelayDsp.h
     Source/Dsp/DelayDsp.cpp
+    Source/Dsp/FilterDsp.h
+    Source/Dsp/FilterDsp.cpp
 
     # --- COMMUNICATION ------------------------------
     Source/Communication/BLEClient.h
@@ -72,6 +75,8 @@ target_sources(test PRIVATE
     Source/Components/Effects/DistortionComponent.cpp
     Source/Components/Effects/DelayComponent.h
     Source/Components/Effects/DelayComponent.cpp
+    Source/Components/Effects/FilterComponent.h
+    Source/Components/Effects/FilterComponent.cpp
 
     # --- CORE --- 
     Source/Components/Core/TitleBarComponent.h

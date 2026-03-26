@@ -34,7 +34,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Distortion::PostGain, "Post Gain", -60.0f, 0.0f, -6.0f
         ));
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Distortion::Mix, "Mix", 0.0f, 1.0f, 0.1f
+            ParamIDs::Distortion::Mix, "Mix", 0.0f, 1.0f, 1.0f
         ));
         // TODO maybe move this stringarray declaration 
         distortionGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
@@ -51,7 +51,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Delay::Feedback, "Feedback", 0.0f, 1.0f, 0.7f 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Delay::Mix, "Mix", 0.0f, 1.0f, 0.1f 
+            ParamIDs::Delay::Mix, "Mix", 0.0f, 1.0f, 1.0f 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Delay::DelayMsL, "Delay Ms L", 0.0f, 1000.0f, 250.0f 
@@ -76,22 +76,24 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Filter::Active, "Active", false 
         ));
         filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Filter::Mix, "Mix", 0.0f, 1.0f, 0.1f 
+            ParamIDs::Filter::Mix, "Mix", 0.0f, 1.0f, 1.0f
+        ));
+        auto cutoffRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f);
+        cutoffRange.setSkewForCentre(1000.0f);
+        filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Filter::Cutoff, "Cutoff", cutoffRange, 1000.0f 
         ));
         filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Filter::Cutoff, "Cutoff", 0.0f, 1.0f, 0.1f 
+            ParamIDs::Filter::Resonance, "Resonance", 0.1f, 10.0f, 0.707f 
         ));
         filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Filter::Resonance, "Resonance", 0.0f, 1.0f, 0.1f 
-        ));
-        filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Filter::Drive, "Drive", 0.0f, 1.0f, 0.1f 
+            ParamIDs::Filter::Drive, "Drive", 0.0f, 40.0f, 0.0f
         ));
         filterGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
-            ParamIDs::Filter::Slope, "Slope", juce::StringArray { "12 dB", "24 dB" }, 0
+            ParamIDs::Filter::SlopeType, "Slope Type", juce::StringArray { "12 dB", "24 dB" }, 0
         ));
         filterGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
-            ParamIDs::Filter::BandType, "Band Type", juce::StringArray { "Low Pass", "High Pass", "Band Pass" }, 0
+            ParamIDs::Filter::PassType, "Pass Type", juce::StringArray { "Low Pass", "High Pass", "Band Pass" }, 0
         ));
     
     params.push_back(std::move(gainGroup));

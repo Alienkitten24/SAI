@@ -43,6 +43,14 @@ TestAudioProcessor::TestAudioProcessor()
     delayParamPointers.delayMsLParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMsL);
     delayParamPointers.delayMsRParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayMsR);
     delayParamPointers.delayTypeParam = m_treeState.getRawParameterValue(ParamIDs::Delay::DelayType);
+
+    filterParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Filter::Active);
+    filterParamPointers.mixParam = m_treeState.getRawParameterValue(ParamIDs::Filter::Mix);
+    filterParamPointers.cutoffParam = m_treeState.getRawParameterValue(ParamIDs::Filter::Cutoff);
+    filterParamPointers.resonanceParam = m_treeState.getRawParameterValue(ParamIDs::Filter::Resonance);
+    filterParamPointers.driveParam = m_treeState.getRawParameterValue(ParamIDs::Filter::Drive);
+    filterParamPointers.slopeTypeParam = m_treeState.getRawParameterValue(ParamIDs::Filter::SlopeType);
+    filterParamPointers.passTypeParam = m_treeState.getRawParameterValue(ParamIDs::Filter::PassType);
 }
 
 TestAudioProcessor::~TestAudioProcessor()
@@ -275,6 +283,7 @@ void TestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     gainDsp.prepare(spec);
     distortionDsp.prepare(spec);
     delayDsp.prepare(spec);
+    filterDsp.prepare(spec);
 }
 
 void TestAudioProcessor::releaseResources()
@@ -348,6 +357,15 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     delayParams.delayType = delayParamPointers.delayTypeParam->load();
     delayDsp.update(delayParams);
 
+    filterParams.active = filterParamPointers.activeParam->load();
+    filterParams.mix = filterParamPointers.mixParam->load();
+    filterParams.cutoff = filterParamPointers.cutoffParam->load();
+    filterParams.resonance = filterParamPointers.resonanceParam->load();
+    filterParams.drive = filterParamPointers.driveParam->load();
+    filterParams.slopeType = filterParamPointers.slopeTypeParam->load();
+    filterParams.passType = filterParamPointers.passTypeParam->load();
+    filterDsp.update(filterParams);
+
     // each dsp uses the same context but it stacks
     // ex: gainDsp.proc(c); reverbDsp.proc(c) <- this c has gain on it 
     // can use unique contexts for parallel processing (ex wet/dry knob)
@@ -355,6 +373,7 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     if (gainParams.active)            gainDsp.process(context);
     if (distortionParams.active)      distortionDsp.process(context);
     if (delayParams.active)           delayDsp.process(context);
+    if (filterParams.active)          filterDsp.process(context);
 }
 
 //==============================================================================

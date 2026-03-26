@@ -11,6 +11,7 @@ DistortionDsp::~DistortionDsp()
 void DistortionDsp::prepare(const juce::dsp::ProcessSpec& spec)
 {
     // init the oversampling object, magic num 2 is for 2^2= 4x oversampling
+    // TODO make it so you can change oversampling rate
     oversampling = std::make_unique<juce::dsp::Oversampling<float>>(
         spec.numChannels,
         2, 

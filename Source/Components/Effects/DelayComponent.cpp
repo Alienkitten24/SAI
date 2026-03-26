@@ -1,7 +1,5 @@
 #include "DelayComponent.h"
 
-#include <iostream>
-
 DelayComponent::DelayComponent(juce::AudioProcessorValueTreeState& treeState)
     : EffectComponent(treeState, ParamIDs::Delay::Active)
 {
@@ -15,7 +13,6 @@ DelayComponent::~DelayComponent()
 
 void DelayComponent::createParameterControls()
 {
-    // addAndMakeVisible(delayKnob);
     addAndMakeVisible(delayMsLKnob);
     addAndMakeVisible(delayMsRKnob);
     addAndMakeVisible(feedbackKnob);

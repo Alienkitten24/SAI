@@ -19,10 +19,12 @@
 #include "Model/GainParams.h"
 #include "Model/DistortionParams.h"
 #include "Model/DelayParams.h"
+#include "Model/FilterParams.h"
 
 #include "Dsp/GainDsp.h"
 #include "Dsp/DistortionDsp.h"
 #include "Dsp/DelayDsp.h"
+#include "Dsp/FilterDsp.h"
 
 //==============================================================================
 /**
@@ -104,6 +106,9 @@ private:
     DelayParams delayParams;
     DelayParamPointers delayParamPointers;
 
+    FilterDsp filterDsp;
+    FilterParams filterParams;
+    FilterParamPointers filterParamPointers;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)
 };

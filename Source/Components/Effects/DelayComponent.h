@@ -15,10 +15,7 @@ public:
     void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:
-
-    // KnobComponent delayKnob { "Delay", treeState, ParamIDs::Delay::DelayMsL }; // FOR MONO
-
-    KnobComponent delayMsLKnob { "Delay L", treeState, ParamIDs::Delay::DelayMsL }; // FOR STEREO & PINGPONG
+    KnobComponent delayMsLKnob { "Delay L", treeState, ParamIDs::Delay::DelayMsL }; 
     KnobComponent delayMsRKnob { "Delay R", treeState, ParamIDs::Delay::DelayMsR };
 
     KnobComponent feedbackKnob { "Feedback", treeState, ParamIDs::Delay::Feedback };
