@@ -9,6 +9,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include <random>
+
 //==============================================================================
 TestAudioProcessor::TestAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -178,6 +180,18 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
         if (gotGyro)        { m_sensorData.gx = tmp.gx; m_sensorData.gy = tmp.gy; m_sensorData.gz = tmp.gz; }
         if (gotEuler)       { m_sensorData.ex = tmp.ex; m_sensorData.ey = tmp.ey; m_sensorData.ez = tmp.ez; }
         if (gotMic)         m_sensorData.mic_rms = tmp.mic_rms;
+    }
+
+    if (m_sensorData.proximity > 5000) {
+        if (auto* pParam = m_treeState.getParameter(ParamIDs::Gain::Gain)) {
+            pParam->beginChangeGesture();
+            std::random_device rd; 
+            std::mt19937 gen(rd()); 
+            std::uniform_real_distribution<float> dis(-60.0f, 0.0f); 
+            float v = dis(gen);
+            pParam->setValueNotifyingHost(v);
+            pParam->endChangeGesture();
+        }
     }
 }
 

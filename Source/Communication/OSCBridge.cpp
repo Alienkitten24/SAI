@@ -4,6 +4,8 @@
 #include <span>
 #include <bit>
 
+#include <stdio.h>
+
 OSCBridge::OSCBridge()
     : m_destAddr("127.0.0.1"), m_destPort(9001)
 {
@@ -24,24 +26,30 @@ OSCBridge::~OSCBridge()
 // or foward() { if size: encodeGest() else: encodeSensors()}
 void OSCBridge::forward(const std::vector<uint8_t>& bytes)
 {
+    // std::cout << " START " << std::endl;
+    // for (auto b : bytes) {
+    //     printf("%02x ", b);
+    // }
+    // std::cout << " END " << std::endl;
+
     // get the bytes for each data point 
     std::span<const uint8_t> bytesTime = std::span(bytes).subspan(0,4);
-    std::span<const uint8_t> bytesProx = std::span(bytes).subspan(4,4);
-    std::span<const uint8_t> bytesAccelX = std::span(bytes).subspan(8,4);
-    std::span<const uint8_t> bytesAccelY = std::span(bytes).subspan(12,4);
-    std::span<const uint8_t> bytesAccelZ = std::span(bytes).subspan(16,4);
-    std::span<const uint8_t> bytesGyroX = std::span(bytes).subspan(20,4);
-    std::span<const uint8_t> bytesGyroY = std::span(bytes).subspan(24,4);
-    std::span<const uint8_t> bytesGyroZ = std::span(bytes).subspan(28,4);
-    std::span<const uint8_t> bytesEulerX = std::span(bytes).subspan(32,4);
-    std::span<const uint8_t> bytesEulerY = std::span(bytes).subspan(36,4);
-    std::span<const uint8_t> bytesEulerZ = std::span(bytes).subspan(40,4);
-    std::span<const uint8_t> bytesMicRms = std::span(bytes).subspan(44,4);
-    std::span<const uint8_t> bytesGest = std::span(bytes).subspan(48);
+    std::span<const uint8_t> bytesProx = std::span(bytes).subspan(4,2);
+    std::span<const uint8_t> bytesAccelX = std::span(bytes).subspan(6,4);
+    std::span<const uint8_t> bytesAccelY = std::span(bytes).subspan(10,4);
+    std::span<const uint8_t> bytesAccelZ = std::span(bytes).subspan(14,4);
+    std::span<const uint8_t> bytesGyroX = std::span(bytes).subspan(18,4);
+    std::span<const uint8_t> bytesGyroY = std::span(bytes).subspan(22,4);
+    std::span<const uint8_t> bytesGyroZ = std::span(bytes).subspan(26,4);
+    std::span<const uint8_t> bytesEulerX = std::span(bytes).subspan(30,4);
+    std::span<const uint8_t> bytesEulerY = std::span(bytes).subspan(34,4);
+    std::span<const uint8_t> bytesEulerZ = std::span(bytes).subspan(38,4);
+    std::span<const uint8_t> bytesMicRms = std::span(bytes).subspan(42,4);
+    // std::span<const uint8_t> bytesGest = std::span(bytes).subspan(48);
 
     // convert from byte array to primative types
     float time = std::bit_cast<float>(*reinterpret_cast<const std::array<uint8_t,4>*>(bytesTime.data()));
-    int prox = std::bit_cast<int>(*reinterpret_cast<const std::array<uint8_t, 4>*>(bytesProx.data()));
+    uint16_t prox = std::bit_cast<uint16_t>(*reinterpret_cast<const std::array<uint8_t, 2>*>(bytesProx.data()));
     float accelX = std::bit_cast<float>(*reinterpret_cast<const std::array<uint8_t,4>*>(bytesAccelX.data()));
     float accelY = std::bit_cast<float>(*reinterpret_cast<const std::array<uint8_t,4>*>(bytesAccelY.data()));
     float accelZ = std::bit_cast<float>(*reinterpret_cast<const std::array<uint8_t,4>*>(bytesAccelZ.data()));
@@ -52,20 +60,20 @@ void OSCBridge::forward(const std::vector<uint8_t>& bytes)
     float eulerY = std::bit_cast<float>(*reinterpret_cast<const std::array<uint8_t,4>*>(bytesEulerY.data()));
     float eulerZ = std::bit_cast<float>(*reinterpret_cast<const std::array<uint8_t,4>*>(bytesEulerZ.data()));
     float micRms = std::bit_cast<float>(*reinterpret_cast<const std::array<uint8_t,4>*>(bytesMicRms.data()));
-    juce::String gest = juce::String(reinterpret_cast<const char*>(bytesGest.data(), bytesGest.size()));
+    // juce::String gest = juce::String(reinterpret_cast<const char*>(bytesGest.data(), bytesGest.size()));
 
     // initialize messages
     juce::OSCMessage msgTime = juce::OSCMessage("/audimo/time");
     juce::OSCMessage msgProx = juce::OSCMessage("/audimo/prox");
     juce::OSCMessage msgAccel = juce::OSCMessage("/audimo/accel");
-    juce::OSCMessage msgGyro = juce::OSCMessage("/audimo/gryo");
+    juce::OSCMessage msgGyro = juce::OSCMessage("/audimo/gyro");
     juce::OSCMessage msgEuler = juce::OSCMessage("/audimo/euler");
     juce::OSCMessage msgMicRms = juce::OSCMessage("/audimo/mic");
     juce::OSCMessage msgGest = juce::OSCMessage("/audimo/gest");
 
     // populate arguments
     msgTime.addFloat32(time);
-    msgProx.addInt32(prox);
+    msgProx.addInt32(static_cast<int>(prox));
     msgAccel.addFloat32(accelX);
     msgAccel.addFloat32(accelY);
     msgAccel.addFloat32(accelZ);
@@ -76,7 +84,7 @@ void OSCBridge::forward(const std::vector<uint8_t>& bytes)
     msgEuler.addFloat32(eulerY);
     msgEuler.addFloat32(eulerZ);
     msgMicRms.addFloat32(micRms);
-    msgGest.addString(gest);
+    // msgGest.addString(gest);
 
     // create and populate bundle
     juce::OSCBundle bundle;
@@ -86,7 +94,7 @@ void OSCBridge::forward(const std::vector<uint8_t>& bytes)
     bundle.addElement(msgGyro);
     bundle.addElement(msgEuler);
     bundle.addElement(msgMicRms);
-    bundle.addElement(msgGest);
+    // bundle.addElement(msgGest);
 
     // send
     sender.send(bundle); 

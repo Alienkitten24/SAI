@@ -20,14 +20,15 @@ void BLEManager::start()
         return;
     }
 
+    // NOTIFY CHARACTERISTIC IS CURRENTLY DISABLED
     // set onNotify function pointer
-    m_client.onNotify = [&](const std::vector<uint8_t>& msg) {
-        this->onNotify(msg);
-    };
+    // m_client.onNotify = [&](const std::vector<uint8_t>& msg) {
+    //     this->onNotify(msg);
+    // };
 
     try {
         m_client.start();
-        m_client.subscribe();
+        // m_client.subscribe();
         m_receiver.start(9001);
 
         m_thread = std::thread([this] { runLoop(); });
