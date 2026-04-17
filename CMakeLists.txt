@@ -64,6 +64,10 @@ target_sources(test PRIVATE
     Source/Views/MatrixView.cpp
     Source/Views/AdvancedView.h
     Source/Views/AdvancedView.cpp
+
+    # --- CONTROLLERS --------------------------------
+    Source/Controllers/ParameterController.h
+    Source/Controllers/ParameterController.cpp
     
     # --- COMPONENTS ---------------------------------
     # --- EFFECTS ---
@@ -77,6 +81,10 @@ target_sources(test PRIVATE
     Source/Components/Effects/DelayComponent.cpp
     Source/Components/Effects/FilterComponent.h
     Source/Components/Effects/FilterComponent.cpp
+
+    # --- MOTIONS ---
+    Source/Components/Motions/ParameterControllerComponent.h
+    Source/Components/Motions/ParameterControllerComponent.cpp
 
     # --- CORE --- 
     Source/Components/Core/TitleBarComponent.h

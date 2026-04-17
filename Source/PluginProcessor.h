@@ -26,6 +26,8 @@
 #include "Dsp/DelayDsp.h"
 #include "Dsp/FilterDsp.h"
 
+#include "Controllers/ParameterController.h"
+
 //==============================================================================
 /**
 */
@@ -70,18 +72,19 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
-    SensorData getSensorDataCopy() const; 
+    SensorDataSnapshot getSensorDataCopy() const; 
+    SensorData& getSensorData(); 
     BLEManager& getBLEManager();
     void onOSCBundleReceived(const juce::OSCBundle& bundle);
     void onOSCMessageReceived(const juce::OSCMessage& message);
 
     //==============================================================================
     juce::AudioProcessorValueTreeState& getTreeState();
+    ParameterController& getParameterController() { return parameterController; }
 
 private:
     //==============================================================================
     BLEManager m_bleManager;
-    mutable juce::CriticalSection lock; // for sensordata
     SensorData m_sensorData;
 
     //==============================================================================
@@ -91,6 +94,8 @@ private:
     juce::AudioProcessorValueTreeState m_treeState {
       *this, nullptr, "PARAMETERS", createParameterLayout()
     };
+
+    ParameterController parameterController;
 
     // EffectComponent* order; so that we can change the position of fx in the chain  
 

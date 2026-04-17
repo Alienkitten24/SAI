@@ -9,8 +9,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-#include <random>
-
 //==============================================================================
 TestAudioProcessor::TestAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -23,12 +21,15 @@ TestAudioProcessor::TestAudioProcessor()
                      #endif
                        )
 #endif
+    , parameterController(m_treeState, m_sensorData) // TODO move this 
 {
     // Lambda: subscribe to OSC bundles from the receiver
     m_bleManager.getReceiver().onBundleReceived = 
         [this](const juce::OSCBundle& bundle) { onOSCBundleReceived(bundle); };
     m_bleManager.getReceiver().onMessageReceived = 
         [this](const juce::OSCMessage& message) { onOSCMessageReceived(message); };
+
+    // parameterController.linkedParameter = gain::gain
 
     gainParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Active);
     gainParamPointers.gainParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Gain);
@@ -61,11 +62,16 @@ TestAudioProcessor::~TestAudioProcessor()
 }
 
 //==============================================================================
-SensorData TestAudioProcessor::getSensorDataCopy() const
+SensorDataSnapshot TestAudioProcessor::getSensorDataCopy() const
 {
-    const juce::ScopedLock sl (lock);
+    return m_sensorData.getCopy();
+}
+
+SensorData& TestAudioProcessor::getSensorData()
+{
     return m_sensorData;
 }
+
 BLEManager& TestAudioProcessor::getBLEManager() 
 {
     return m_bleManager;
@@ -74,7 +80,13 @@ BLEManager& TestAudioProcessor::getBLEManager()
 void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
 {
     // Temporary storage and flags
-    SensorData tmp = m_sensorData; // start from current values (optional)
+    float tmpTime = 0.0f;
+    int tmpProximity = 0;
+    float tmpAx = 0.0f, tmpAy = 0.0f, tmpAz = 0.0f;
+    float tmpGx = 0.0f, tmpGy = 0.0f, tmpGz = 0.0f;
+    float tmpEx = 0.0f, tmpEy = 0.0f, tmpEz = 0.0f;
+    float tmpMicRms = 0.0f;
+    
     bool gotTime = false;
     bool gotProximity = false;
     // bool gotGesture = false;
@@ -104,7 +116,7 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
             case 0: // /audimo/time
                 if (message.size() >= 1 && message[0].isFloat32())
                 {
-                    tmp.time = message[0].getFloat32();
+                    tmpTime = message[0].getFloat32();
                     gotTime = true;
                 }
                 break;
@@ -112,7 +124,7 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
             case 1: // /audimo/prox
                 if (message.size() >= 1 && message[0].isInt32())
                 {
-                    tmp.proximity = message[0].getInt32();
+                    tmpProximity = message[0].getInt32();
                     gotProximity = true;
                 }
                 break;
@@ -129,9 +141,9 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
             case 3: // /audimo/accel
                 if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
                 {
-                    tmp.ax = message[0].getFloat32();
-                    tmp.ay = message[1].getFloat32();
-                    tmp.az = message[2].getFloat32();
+                    tmpAx = message[0].getFloat32();
+                    tmpAy = message[1].getFloat32();
+                    tmpAz = message[2].getFloat32();
                     gotAccel = true;
                 }
                 break;
@@ -139,9 +151,9 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
             case 4: // /audimo/gyro
                 if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
                 {
-                    tmp.gx = message[0].getFloat32();
-                    tmp.gy = message[1].getFloat32();
-                    tmp.gz = message[2].getFloat32();
+                    tmpGx = message[0].getFloat32();
+                    tmpGy = message[1].getFloat32();
+                    tmpGz = message[2].getFloat32();
                     gotGyro = true;
                 }
                 break;
@@ -149,9 +161,9 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
             case 5: // /audimo/euler
                 if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
                 {
-                    tmp.ex = message[0].getFloat32();
-                    tmp.ey = message[1].getFloat32();
-                    tmp.ez = message[2].getFloat32();
+                    tmpEx = message[0].getFloat32();
+                    tmpEy = message[1].getFloat32();
+                    tmpEz = message[2].getFloat32();
                     gotEuler = true;
                 }
                 break;
@@ -159,7 +171,7 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
             case 6: // /audimo/mic
                 if (message.size() >= 1 && message[0].isFloat32())
                 {
-                    tmp.mic_rms = message[0].getFloat32();
+                    tmpMicRms = message[0].getFloat32();
                     gotMic = true;
                 }
                 break;
@@ -170,48 +182,23 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
         }
     }
 
-    // Apply updates under lock (only overwrite fields that were present)
-    {
-        const juce::ScopedLock sl (lock);
-        if (gotTime)        m_sensorData.time = tmp.time;
-        if (gotProximity)   m_sensorData.proximity = tmp.proximity;
-        // if (gotGesture)     m_sensorData.gesture = tmp.gesture;
-        if (gotAccel)       { m_sensorData.ax = tmp.ax; m_sensorData.ay = tmp.ay; m_sensorData.az = tmp.az; }
-        if (gotGyro)        { m_sensorData.gx = tmp.gx; m_sensorData.gy = tmp.gy; m_sensorData.gz = tmp.gz; }
-        if (gotEuler)       { m_sensorData.ex = tmp.ex; m_sensorData.ey = tmp.ey; m_sensorData.ez = tmp.ez; }
-        if (gotMic)         m_sensorData.mic_rms = tmp.mic_rms;
-    }
+    // Apply updates through thread-safe setters (only overwrite fields that were present)
+    if (gotTime)        m_sensorData.setTime(tmpTime);
+    if (gotProximity)   m_sensorData.setProximity(tmpProximity);
+    if (gotAccel)       m_sensorData.setAcceleration(tmpAx, tmpAy, tmpAz);
+    if (gotGyro)        m_sensorData.setGyro(tmpGx, tmpGy, tmpGz);
+    if (gotEuler)       m_sensorData.setEuler(tmpEx, tmpEy, tmpEz);
+    if (gotMic)         m_sensorData.setMicRms(tmpMicRms);
 
-    if (m_sensorData.proximity > 5000) {
-        if (auto* pParam = m_treeState.getParameter(ParamIDs::Gain::Gain)) {
-            pParam->beginChangeGesture();
-            std::random_device rd; 
-            std::mt19937 gen(rd()); 
-            std::uniform_real_distribution<float> dis(-60.0f, 0.0f); 
-            float v = dis(gen);
-            pParam->setValueNotifyingHost(v);
-            pParam->endChangeGesture();
-        }
-    }
 }
 
 void TestAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
 {
     auto addr = message.getAddressPattern().toString();
     if (addr == "/audimo/gest") {
-        juce::String tmp = m_sensorData.gesture;
-        bool gotGesture = false;
-
         if (message.size() >= 1 && message[0].isString())
         {
-            tmp = message[0].getString();
-            gotGesture = true;
-        }
-
-        // Apply updates under lock (only overwrite fields that were present)
-        {
-            const juce::ScopedLock sl (lock);
-            if (gotGesture)     m_sensorData.gesture = tmp;
+            m_sensorData.setGesture(message[0].getString());
         }
     }
 }
@@ -338,19 +325,13 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-
-
     juce::dsp::AudioBlock<float> block (buffer);
     juce::dsp::ProcessContextReplacing<float> context (block);
+
+    parameterController.update();
 
     gainParams.active = gainParamPointers.activeParam->load();
     gainParams.gain = gainParamPointers.gainParam->load();

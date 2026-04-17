@@ -1,9 +1,11 @@
 # Remove-Item -Recurse -Force Builds
 
-cmake -B Builds -G "Visual Studio 17 2022"
+# cmake -B Builds -G "Visual Studio 17 2022" 
+cmake -B Builds -G "Visual Studio 18"
 cmake --build Builds --config Release -j5
 
-$exePath = "C:\Users\felix\Downloads\testplugin\test\Builds\test_artefacts\Release\Standalone\test.exe"
+# $exePath = "C:\Users\felix\Downloads\testplugin\test\Builds\test_artefacts\Release\Standalone\test.exe"
+$exePath = "C:\Users\Engineer\Downloads\testplugin\SAI\Builds\test_artefacts\Release\Standalone\test.exe"
 
 if ($LASTEXITCODE -eq 0) {
     # Run the executable if it exists

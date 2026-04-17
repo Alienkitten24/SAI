@@ -10,6 +10,7 @@ namespace GroupIDs {
     inline constexpr auto Distortion = "dist";
     inline constexpr auto Delay = "delay";
     inline constexpr auto Filter = "filter";
+    inline constexpr auto Controller = "controller";
 };
 
 namespace ParamIDs {
@@ -43,6 +44,13 @@ namespace ParamIDs {
         inline constexpr auto SlopeType = "filter_slopeType"; 
         inline constexpr auto PassType = "filter_passType"; 
         // inline constexpr auto FilterType = "filter_filterType"; // ladder, svf, iir, fir
+    }
+    namespace Controller {
+        inline constexpr auto Active = "controller_active";
+        // inline constexpr auto SensorType = "controller_sensorType";
+        // inline constexpr auto Multiplier = "controller_multiplier";
+        inline constexpr auto Minimum = "controller_minimum";
+        inline constexpr auto Maximum = "controller_maximum";
     }
 };
 

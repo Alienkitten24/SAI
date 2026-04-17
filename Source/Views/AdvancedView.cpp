@@ -85,7 +85,7 @@ void AdvancedView::changeListenerCallback(juce::ChangeBroadcaster* source)
 void AdvancedView::timerCallback() 
 {
   // Copy data under lock then update labels on GUI thread
-  SensorData copy = audioProcessor.getSensorDataCopy();
+  SensorDataSnapshot copy = audioProcessor.getSensorDataCopy();
 
   // Update label texts (match order in sensorData)
   if (rawDataLabels.size() == 13) {

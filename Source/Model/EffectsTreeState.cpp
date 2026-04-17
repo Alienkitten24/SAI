@@ -95,11 +95,36 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
         filterGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
             ParamIDs::Filter::PassType, "Pass Type", juce::StringArray { "Low Pass", "High Pass", "Band Pass" }, 0
         ));
+
+    auto controllerGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
+        GroupIDs::Controller, "Controller", "|"
+    );
+        filterGroup->addChild(std::make_unique<juce::AudioParameterBool>(
+            ParamIDs::Filter::Active, "Active", false 
+        ));
+        // controllerGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+        //     ParamIDs::Controller::SensorType, 
+        //     "Sensor Type",
+        //     juce::StringArray { 
+        //         "Proximity", 
+        //         "Acceleration X", "Acceleration Y", "Acceleration Z", 
+        //         "Gyro X", "Gyro Y", "Gyro Z", 
+        //         "Euler X", "Euler Y", "Euler Z", 
+        //         "Microphone"},
+        //     0
+        // ));
+        controllerGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Controller::Minimum, "Minimum", 0.0f, 65535.0f, 2000.0f
+        ));
+        controllerGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Controller::Maximum, "Maximum", 0.0f, 65535.0f, 8000.0f
+        ));
     
     params.push_back(std::move(gainGroup));
     params.push_back(std::move(distortionGroup));
     params.push_back(std::move(delayGroup));
     params.push_back(std::move(filterGroup));
+    params.push_back(std::move(controllerGroup));
 
     return { params.begin(), params.end() };
 }
