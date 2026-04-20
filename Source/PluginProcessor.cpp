@@ -348,7 +348,7 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     thresholdParams.active = thresholdParamPointers.activeParam->load();
     thresholdParams.sensorDataType = thresholdParamPointers.sensorDataTypeParam->load();
     thresholdParams.threshold = thresholdParamPointers.thresholdParam->load();
-    // thresholdController.update(thresholdParams, m_sensorData.getCopy());
+    thresholdController.update(thresholdParams, m_sensorData.getCopy());
 
     gainParams.active = gainParamPointers.activeParam->load();
     gainParams.gain = gainParamPointers.gainParam->load();
@@ -385,8 +385,9 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
 
 
     proportionalController.setTargetParameter(m_treeState.getParameter(ParamIDs::Gain::Gain));
+    thresholdController.setTargetParameter(m_treeState.getParameter(ParamIDs::Gain::Gain));
     if (proportionalParams.active)    proportionalController.process();
-    // if (thresholdParams.active)       thresholdController.process();
+    if (thresholdParams.active)       thresholdController.process();
 
     if (gainParams.active)            gainDsp.process(context);
     if (distortionParams.active)      distortionDsp.process(context);

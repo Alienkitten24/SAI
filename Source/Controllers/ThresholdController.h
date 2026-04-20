@@ -13,12 +13,11 @@ public:
 
     void update(const ThresholdParams& p, const SensorDataSnapshot& s);
     void process();
-    void setTargetKnob(KnobComponent* knob);
+    void setTargetParameter(juce::RangedAudioParameter* param);
 
     void setSensorDataType(int type);
 
 private:
-    juce::Component::SafePointer<KnobComponent> targetKnob = nullptr;
     juce::RangedAudioParameter* targetParam = nullptr;
 
     SensorDataSnapshot sensorData;
