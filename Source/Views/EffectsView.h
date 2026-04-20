@@ -6,7 +6,8 @@
 #include "../Components/Effects/DistortionComponent.h"
 #include "../Components/Effects/DelayComponent.h"
 #include "../Components/Effects/FilterComponent.h"
-#include "../Components/Motions/ParameterControllerComponent.h"
+#include "../Components/Motions/ProportionalControllerComponent.h"
+#include "../Components/Motions/ThresholdControllerComponent.h"
 
 class EffectsView : public juce::Component
 {
@@ -26,7 +27,8 @@ private:
     DistortionComponent distortionComponent;
     DelayComponent delayComponent;
     FilterComponent filterComponent;
-    ParameterControllerComponent parameterControllerComponent;
+    ProportionalControllerComponent proportionalControllerComponent;
+    ThresholdControllerComponent thresholdControllerComponent;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectsView)

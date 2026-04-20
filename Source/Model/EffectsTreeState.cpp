@@ -96,35 +96,44 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Filter::PassType, "Pass Type", juce::StringArray { "Low Pass", "High Pass", "Band Pass" }, 0
         ));
 
-    auto controllerGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
-        GroupIDs::Controller, "Controller", "|"
+    auto proportionalGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
+        GroupIDs::Proportional, "Controller", "|"
     );
-        filterGroup->addChild(std::make_unique<juce::AudioParameterBool>(
-            ParamIDs::Filter::Active, "Active", false 
+        proportionalGroup->addChild(std::make_unique<juce::AudioParameterBool>(
+            ParamIDs::Proportional::Active, "Active", false 
         ));
-        // controllerGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
-        //     ParamIDs::Controller::SensorType, 
-        //     "Sensor Type",
-        //     juce::StringArray { 
-        //         "Proximity", 
-        //         "Acceleration X", "Acceleration Y", "Acceleration Z", 
-        //         "Gyro X", "Gyro Y", "Gyro Z", 
-        //         "Euler X", "Euler Y", "Euler Z", 
-        //         "Microphone"},
-        //     0
-        // ));
-        controllerGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Controller::Minimum, "Minimum", 0.0f, 65535.0f, 2000.0f
+        proportionalGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+            ParamIDs::Proportional::SensorDataType, "Sensor Data Type", ParamIDs::Sensor::SensorDataStrings, 0
         ));
-        controllerGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Controller::Maximum, "Maximum", 0.0f, 65535.0f, 8000.0f
+        proportionalGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Proportional::Minimum, "Minimum", 0.0f, 65535.0f, 2000.0f
+        ));
+        proportionalGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Proportional::Maximum, "Maximum", 0.0f, 65535.0f, 8000.0f
+        ));
+        proportionalGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Proportional::Multiplier, "Multiplier", 0.0f, 10.0f, 1.0f
+        ));
+
+    auto thresholdGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
+        GroupIDs::Threshold, "Controller", "|"
+    );
+        thresholdGroup->addChild(std::make_unique<juce::AudioParameterBool>(
+            ParamIDs::Threshold::Active, "Active", false 
+        ));
+        thresholdGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
+            ParamIDs::Threshold::SensorDataType, "Sensor Data Type", ParamIDs::Sensor::SensorDataStrings, 0
+        ));
+        thresholdGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Threshold::Threshold, "Threshold", 0.0f, 65535.0f, 2000.0f
         ));
     
     params.push_back(std::move(gainGroup));
     params.push_back(std::move(distortionGroup));
     params.push_back(std::move(delayGroup));
     params.push_back(std::move(filterGroup));
-    params.push_back(std::move(controllerGroup));
+    params.push_back(std::move(proportionalGroup));
+    params.push_back(std::move(thresholdGroup));
 
     return { params.begin(), params.end() };
 }

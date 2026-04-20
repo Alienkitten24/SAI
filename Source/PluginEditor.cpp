@@ -16,7 +16,7 @@ TestAudioProcessorEditor::TestAudioProcessorEditor (TestAudioProcessor& p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (800, 600);
+    setSize (1000, 600);
     setResizable (true, false);
 
     addAndMakeVisible(m_navBar);

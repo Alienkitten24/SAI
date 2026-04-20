@@ -21,7 +21,6 @@ TestAudioProcessor::TestAudioProcessor()
                      #endif
                        )
 #endif
-    , parameterController(m_treeState, m_sensorData) // TODO move this 
 {
     // Lambda: subscribe to OSC bundles from the receiver
     m_bleManager.getReceiver().onBundleReceived = 
@@ -29,7 +28,15 @@ TestAudioProcessor::TestAudioProcessor()
     m_bleManager.getReceiver().onMessageReceived = 
         [this](const juce::OSCMessage& message) { onOSCMessageReceived(message); };
 
-    // parameterController.linkedParameter = gain::gain
+    proportionalParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Proportional::Active);
+    proportionalParamPointers.sensorDataTypeParam = m_treeState.getRawParameterValue(ParamIDs::Proportional::SensorDataType);
+    proportionalParamPointers.minimumParam = m_treeState.getRawParameterValue(ParamIDs::Proportional::Minimum);
+    proportionalParamPointers.maximumParam = m_treeState.getRawParameterValue(ParamIDs::Proportional::Maximum);
+    proportionalParamPointers.multiplierParam = m_treeState.getRawParameterValue(ParamIDs::Proportional::Multiplier);
+
+    thresholdParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Threshold::Active);
+    thresholdParamPointers.sensorDataTypeParam = m_treeState.getRawParameterValue(ParamIDs::Threshold::SensorDataType);
+    thresholdParamPointers.thresholdParam = m_treeState.getRawParameterValue(ParamIDs::Threshold::Threshold);
 
     gainParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Active);
     gainParamPointers.gainParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Gain);
@@ -331,7 +338,17 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     juce::dsp::AudioBlock<float> block (buffer);
     juce::dsp::ProcessContextReplacing<float> context (block);
 
-    parameterController.update();
+    proportionalParams.active = proportionalParamPointers.activeParam->load();
+    proportionalParams.sensorDataType = proportionalParamPointers.sensorDataTypeParam->load();
+    proportionalParams.minimum = proportionalParamPointers.minimumParam->load();
+    proportionalParams.maximum = proportionalParamPointers.maximumParam->load();
+    proportionalParams.multiplier = proportionalParamPointers.multiplierParam->load();
+    proportionalController.update(proportionalParams, m_sensorData.getCopy());
+
+    thresholdParams.active = thresholdParamPointers.activeParam->load();
+    thresholdParams.sensorDataType = thresholdParamPointers.sensorDataTypeParam->load();
+    thresholdParams.threshold = thresholdParamPointers.thresholdParam->load();
+    // thresholdController.update(thresholdParams, m_sensorData.getCopy());
 
     gainParams.active = gainParamPointers.activeParam->load();
     gainParams.gain = gainParamPointers.gainParam->load();
@@ -365,6 +382,12 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     // ex: gainDsp.proc(c); reverbDsp.proc(c) <- this c has gain on it 
     // can use unique contexts for parallel processing (ex wet/dry knob)
     // TODO rn this is all sequential -> unintended effect gainParam is change Distortion's drive
+
+
+    proportionalController.setTargetParameter(m_treeState.getParameter(ParamIDs::Gain::Gain));
+    if (proportionalParams.active)    proportionalController.process();
+    // if (thresholdParams.active)       thresholdController.process();
+
     if (gainParams.active)            gainDsp.process(context);
     if (distortionParams.active)      distortionDsp.process(context);
     if (delayParams.active)           delayDsp.process(context);

@@ -1,12 +1,13 @@
 #include "EffectsView.h"
 
 EffectsView::EffectsView (TestAudioProcessor& p)
-    : audioProcessor    (p), 
-    gainComponent       (p.getTreeState()),
-    distortionComponent (p.getTreeState()),
-    delayComponent      (p.getTreeState()),
-    filterComponent     (p.getTreeState()),
-    parameterControllerComponent (p.getTreeState(), p.getParameterController(), ParamIDs::Controller::Active)
+    : audioProcessor                (p), 
+    gainComponent                   (p.getTreeState()),
+    distortionComponent             (p.getTreeState()),
+    delayComponent                  (p.getTreeState()),
+    filterComponent                 (p.getTreeState()),
+    proportionalControllerComponent (p.getTreeState()),
+    thresholdControllerComponent    (p.getTreeState())
 {   
     // addAndMakeVisible(label);
     // label.setText("Effects view", juce::dontSendNotification);
@@ -15,7 +16,8 @@ EffectsView::EffectsView (TestAudioProcessor& p)
     addAndMakeVisible(distortionComponent);
     addAndMakeVisible(delayComponent);
     addAndMakeVisible(filterComponent);
-    addAndMakeVisible(parameterControllerComponent);
+    addAndMakeVisible(proportionalControllerComponent);
+    addAndMakeVisible(thresholdControllerComponent);
 }
 
 EffectsView::~EffectsView()
@@ -41,7 +43,8 @@ void EffectsView::resized()
     gainComponent.setBounds(leftColumn.removeFromTop(leftRowHeight));
     distortionComponent.setBounds(leftColumn.removeFromTop(leftRowHeight));
     delayComponent.setBounds(leftColumn.removeFromTop(leftRowHeight));
-    filterComponent.setBounds(leftColumn); 
+    filterComponent.setBounds(leftColumn.removeFromTop(leftRowHeight)); 
     
-    parameterControllerComponent.setBounds(rightColumn.removeFromTop(leftRowHeight));
+    proportionalControllerComponent.setBounds(rightColumn.removeFromTop(leftRowHeight));
+    thresholdControllerComponent.setBounds(rightColumn.removeFromTop(leftRowHeight));
 }

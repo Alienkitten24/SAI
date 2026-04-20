@@ -1,17 +1,19 @@
 #include "ParameterControllerComponent.h"
 
-ParameterControllerComponent::ParameterControllerComponent(juce::AudioProcessorValueTreeState& treeState, ParameterController& controller, const juce::String& activeParamID)
+ParameterControllerComponent::ParameterControllerComponent(juce::AudioProcessorValueTreeState& treeState, const juce::String& activeParamID)
     : treeState(treeState), 
-    controller(controller),
     titleBar(treeState, activeParamID)
 {
     addAndMakeVisible(titleBar);
-    addAndMakeVisible(minKnob);
-    addAndMakeVisible(maxKnob);
 }
 
 ParameterControllerComponent::~ParameterControllerComponent()
 {
+}
+
+void ParameterControllerComponent::setControllerName(const juce::String& name)
+{
+    titleBar.setTitle(name);
 }
 
 void ParameterControllerComponent::paint(juce::Graphics& g)
@@ -30,9 +32,7 @@ void ParameterControllerComponent::resized()
     int titleBarHeight = 40;
     titleBar.setBounds(bounds.removeFromTop(titleBarHeight));
 
-    int itemWidth = bounds.getWidth() / 2;
-    minKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
-    maxKnob.setBounds(bounds.reduced(5));
+    layoutMainContent(bounds);
 }
 
  

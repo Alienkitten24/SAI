@@ -11,7 +11,7 @@ public:
     DistortionComponent(juce::AudioProcessorValueTreeState& treeState);
     ~DistortionComponent();
 
-    void createParameterControls() override;
+    void createWidgets() override;
     void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:

@@ -4,14 +4,14 @@ DelayComponent::DelayComponent(juce::AudioProcessorValueTreeState& treeState)
     : EffectComponent(treeState, ParamIDs::Delay::Active)
 {
     setEffectName("Delay");
-    createParameterControls();
+    createWidgets();
 }
 
 DelayComponent::~DelayComponent()
 {
 }
 
-void DelayComponent::createParameterControls()
+void DelayComponent::createWidgets()
 {
     addAndMakeVisible(delayMsLKnob);
     addAndMakeVisible(delayMsRKnob);

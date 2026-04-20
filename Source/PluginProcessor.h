@@ -26,7 +26,8 @@
 #include "Dsp/DelayDsp.h"
 #include "Dsp/FilterDsp.h"
 
-#include "Controllers/ParameterController.h"
+#include "Controllers/ProportionalController.h"
+#include "Controllers/ThresholdController.h"
 
 //==============================================================================
 /**
@@ -80,7 +81,6 @@ public:
 
     //==============================================================================
     juce::AudioProcessorValueTreeState& getTreeState();
-    ParameterController& getParameterController() { return parameterController; }
 
 private:
     //==============================================================================
@@ -95,7 +95,13 @@ private:
       *this, nullptr, "PARAMETERS", createParameterLayout()
     };
 
-    ParameterController parameterController;
+    ProportionalController proportionalController;
+    ProportionalParams proportionalParams;
+    ProportionalParamPointers proportionalParamPointers;
+
+    ThresholdController thresholdController;
+    ThresholdParams thresholdParams;
+    ThresholdParamPointers thresholdParamPointers;
 
     // EffectComponent* order; so that we can change the position of fx in the chain  
 

@@ -10,7 +10,8 @@ namespace GroupIDs {
     inline constexpr auto Distortion = "dist";
     inline constexpr auto Delay = "delay";
     inline constexpr auto Filter = "filter";
-    inline constexpr auto Controller = "controller";
+    inline constexpr auto Proportional = "proportional";
+    inline constexpr auto Threshold = "threshold";
 };
 
 namespace ParamIDs {
@@ -45,12 +46,28 @@ namespace ParamIDs {
         inline constexpr auto PassType = "filter_passType"; 
         // inline constexpr auto FilterType = "filter_filterType"; // ladder, svf, iir, fir
     }
-    namespace Controller {
-        inline constexpr auto Active = "controller_active";
-        // inline constexpr auto SensorType = "controller_sensorType";
-        // inline constexpr auto Multiplier = "controller_multiplier";
-        inline constexpr auto Minimum = "controller_minimum";
-        inline constexpr auto Maximum = "controller_maximum";
+
+    namespace Proportional {
+        inline constexpr auto Active = "proportional_active";
+        inline constexpr auto SensorDataType = "proportional_sensorDataType";
+        inline constexpr auto Minimum = "proportional_minimum";
+        inline constexpr auto Maximum = "proportional_maximum";
+        inline constexpr auto Multiplier = "proportional_multiplier";
+    }
+    namespace Threshold {
+        inline constexpr auto Active = "threshold_active";
+        inline constexpr auto SensorDataType = "threshold_sensorDataType";
+        inline constexpr auto Threshold = "threshold_threshold";
+    }
+
+    namespace Sensor {
+        inline const juce::StringArray SensorDataStrings { 
+            "Proximity", 
+            "Acceleration X", "Acceleration Y", "Acceleration Z", 
+            "Gyro X", "Gyro Y", "Gyro Z", 
+            "Euler X", "Euler Y", "Euler Z", 
+            "Microphone"
+        };
     }
 };
 

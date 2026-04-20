@@ -14,6 +14,8 @@ KnobComponent::KnobComponent(
     // slider.setRange(0.0, 100.0, 0.1); 
     addAndMakeVisible(slider);
 
+    parameter = treeState.getParameter(paramID);
+    
     attachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         treeState, paramID, slider
     );
@@ -36,4 +38,14 @@ void KnobComponent::resized()
     label.setBounds(bounds.removeFromTop(labelHeight));
 
     slider.setBounds(bounds);
+}
+
+juce::Slider& KnobComponent::getSlider()
+{
+    return slider;
+}
+
+juce::RangedAudioParameter* KnobComponent::getParameter()
+{
+    return parameter;
 }

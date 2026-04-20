@@ -6,14 +6,14 @@ DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& tre
     : EffectComponent(treeState, ParamIDs::Distortion::Active)
 {
     setEffectName("Distortion");
-    createParameterControls();
+    createWidgets();
 }
 
 DistortionComponent::~DistortionComponent()
 {
 }
 
-void DistortionComponent::createParameterControls()
+void DistortionComponent::createWidgets()
 {
     addAndMakeVisible(driveKnob);
     addAndMakeVisible(postGainKnob);

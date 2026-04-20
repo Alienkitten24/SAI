@@ -11,7 +11,7 @@ public:
     DelayComponent(juce::AudioProcessorValueTreeState& treeState);
     ~DelayComponent();
 
-    void createParameterControls() override;
+    void createWidgets() override;
     void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:

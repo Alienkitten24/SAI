@@ -5,14 +5,14 @@ FilterComponent::FilterComponent(juce::AudioProcessorValueTreeState& treeState)
     : EffectComponent(treeState, ParamIDs::Filter::Active)
 {
     setEffectName("Filter");
-    createParameterControls();
+    createWidgets();
 }
 
 FilterComponent::~FilterComponent()
 {
 }
 
-void FilterComponent::createParameterControls()
+void FilterComponent::createWidgets()
 {
     addAndMakeVisible(mixKnob);
     addAndMakeVisible(cutoffKnob);

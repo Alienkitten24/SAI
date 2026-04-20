@@ -80,7 +80,8 @@ void DistortionDsp::update(const DistortionParams& p)
     }
 }
 
-void DistortionDsp::setWaveshaper(int type) {
+void DistortionDsp::setWaveshaper(int type) 
+{
     switch (type) {
         case DistortionType::SOFTCLIP :
             waveshaper.functionToUse = [] (float x) { 

@@ -30,6 +30,7 @@ target_sources(test PRIVATE
     
     # --- MODEL --------------------------------------
     Source/Model/SensorData.h
+    Source/Model/SensorData.cpp
     Source/Model/EffectsTreeState.h
     Source/Model/EffectsTreeState.cpp
     Source/Model/GainParams.h
@@ -66,8 +67,10 @@ target_sources(test PRIVATE
     Source/Views/AdvancedView.cpp
 
     # --- CONTROLLERS --------------------------------
-    Source/Controllers/ParameterController.h
-    Source/Controllers/ParameterController.cpp
+    Source/Controllers/ProportionalController.h
+    Source/Controllers/ProportionalController.cpp
+    Source/Controllers/ThresholdController.h
+    Source/Controllers/ThresholdController.cpp
     
     # --- COMPONENTS ---------------------------------
     # --- EFFECTS ---
@@ -85,6 +88,10 @@ target_sources(test PRIVATE
     # --- MOTIONS ---
     Source/Components/Motions/ParameterControllerComponent.h
     Source/Components/Motions/ParameterControllerComponent.cpp
+    Source/Components/Motions/ProportionalControllerComponent.h
+    Source/Components/Motions/ProportionalControllerComponent.cpp
+    Source/Components/Motions/ThresholdControllerComponent.h
+    Source/Components/Motions/ThresholdControllerComponent.cpp
 
     # --- CORE --- 
     Source/Components/Core/TitleBarComponent.h

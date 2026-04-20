@@ -11,7 +11,7 @@ public:
     FilterComponent(juce::AudioProcessorValueTreeState& treeState);
     ~FilterComponent();
 
-    void createParameterControls() override;
+    void createWidgets() override;
     void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:

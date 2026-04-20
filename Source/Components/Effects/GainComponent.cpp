@@ -4,14 +4,14 @@ GainComponent::GainComponent(juce::AudioProcessorValueTreeState& treeState)
     : EffectComponent(treeState, ParamIDs::Gain::Active)
 {
     setEffectName("Gain");
-    createParameterControls();
+    createWidgets();
 }
 
 GainComponent::~GainComponent()
 {
 }
 
-void GainComponent::createParameterControls()
+void GainComponent::createWidgets()
 {
     addAndMakeVisible(gainKnob);
 }
