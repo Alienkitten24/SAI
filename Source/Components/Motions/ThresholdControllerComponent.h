@@ -17,6 +17,7 @@ public:
 private:
     ComboBoxComponent sensorDataTypeComboBox { treeState, ParamIDs::Threshold::SensorDataType };
     KnobComponent thresholdKnob { "Threshold", treeState, ParamIDs::Threshold::Threshold };
+    KnobComponent modifierKnob { "Modifier", treeState, ParamIDs::Threshold::Modifier };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ThresholdControllerComponent)
 };

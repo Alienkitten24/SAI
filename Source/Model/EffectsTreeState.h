@@ -58,6 +58,7 @@ namespace ParamIDs {
         inline constexpr auto Active = "threshold_active";
         inline constexpr auto SensorDataType = "threshold_sensorDataType";
         inline constexpr auto Threshold = "threshold_threshold";
+        inline constexpr auto Modifier = "threshold_modifier";
     }
 
     namespace Sensor {

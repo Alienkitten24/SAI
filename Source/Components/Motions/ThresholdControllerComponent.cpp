@@ -15,12 +15,14 @@ void ThresholdControllerComponent::createWidgets()
 {
     addAndMakeVisible(sensorDataTypeComboBox);
     addAndMakeVisible(thresholdKnob);
+    addAndMakeVisible(modifierKnob);
 }
 
 
 void ThresholdControllerComponent::layoutMainContent(juce::Rectangle<int> bounds)
 {
-    int itemWidth = bounds.getWidth() / 2;
+    int itemWidth = bounds.getWidth() / 3;
     sensorDataTypeComboBox.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
-    thresholdKnob.setBounds(bounds.reduced(5));
+    thresholdKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
+    modifierKnob.setBounds(bounds.reduced(5));
 }

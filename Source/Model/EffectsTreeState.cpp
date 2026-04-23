@@ -127,6 +127,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
         thresholdGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Threshold::Threshold, "Threshold", 0.0f, 65535.0f, 2000.0f
         ));
+        thresholdGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
+            ParamIDs::Threshold::Modifier, "Modifier", 0.0f, 65535.0f, 2000.0f
+        ));
     
     params.push_back(std::move(gainGroup));
     params.push_back(std::move(distortionGroup));

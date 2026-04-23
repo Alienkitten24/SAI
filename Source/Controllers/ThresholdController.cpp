@@ -12,6 +12,7 @@ void ThresholdController::update(const ThresholdParams& p, const SensorDataSnaps
 {
     sensorData = s;
     threshold = p.threshold;
+    modifier = p.modifier;
     int type = p.sensorDataType;
     if (lastSensorDataType != type)
     {

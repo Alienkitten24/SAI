@@ -4,7 +4,7 @@ MatrixView::MatrixView (TestAudioProcessor& p)
     : audioProcessor (p)
 {   
     addAndMakeVisible(label);
-    label.setText("Matrix view", juce::dontSendNotification);
+    label.setText("No current connections", juce::dontSendNotification);
 }
 
 MatrixView::~MatrixView()

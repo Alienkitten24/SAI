@@ -37,6 +37,7 @@ TestAudioProcessor::TestAudioProcessor()
     thresholdParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Threshold::Active);
     thresholdParamPointers.sensorDataTypeParam = m_treeState.getRawParameterValue(ParamIDs::Threshold::SensorDataType);
     thresholdParamPointers.thresholdParam = m_treeState.getRawParameterValue(ParamIDs::Threshold::Threshold);
+    thresholdParamPointers.modifierParam = m_treeState.getRawParameterValue(ParamIDs::Threshold::Modifier);
 
     gainParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Active);
     gainParamPointers.gainParam = m_treeState.getRawParameterValue(ParamIDs::Gain::Gain);
@@ -348,6 +349,7 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     thresholdParams.active = thresholdParamPointers.activeParam->load();
     thresholdParams.sensorDataType = thresholdParamPointers.sensorDataTypeParam->load();
     thresholdParams.threshold = thresholdParamPointers.thresholdParam->load();
+    thresholdParams.modifier = thresholdParamPointers.modifierParam->load();
     thresholdController.update(thresholdParams, m_sensorData.getCopy());
 
     gainParams.active = gainParamPointers.activeParam->load();

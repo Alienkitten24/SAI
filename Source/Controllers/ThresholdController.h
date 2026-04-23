@@ -24,6 +24,7 @@ private:
     int lastSensorDataType;     
 
     float threshold;
+    float modifier;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ThresholdController)
 };
