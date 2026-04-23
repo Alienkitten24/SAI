@@ -32,12 +32,12 @@
 //==============================================================================
 /**
 */
-class TestAudioProcessor  : public juce::AudioProcessor
+class AudimoAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    TestAudioProcessor();
-    ~TestAudioProcessor() override;
+    AudimoAudioProcessor();
+    ~AudimoAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -121,5 +121,5 @@ private:
     FilterParams filterParams;
     FilterParamPointers filterParamPointers;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudimoAudioProcessor)
 };

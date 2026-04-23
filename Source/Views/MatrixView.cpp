@@ -1,6 +1,6 @@
 #include "MatrixView.h"
 
-MatrixView::MatrixView (TestAudioProcessor& p)
+MatrixView::MatrixView (AudimoAudioProcessor& p)
     : audioProcessor (p)
 {   
     addAndMakeVisible(label);

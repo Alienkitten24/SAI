@@ -8,7 +8,7 @@
 class AdvancedView : public juce::Component, public juce::Timer, public juce::ChangeListener
 {
 public:
-    AdvancedView (TestAudioProcessor&);
+    AdvancedView (AudimoAudioProcessor&);
     ~AdvancedView();
 
     void paint(juce::Graphics& g) override;
@@ -16,7 +16,7 @@ public:
 
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 private:
-    TestAudioProcessor& audioProcessor;
+    AudimoAudioProcessor& audioProcessor;
 
     BLESettingsComponent bleSettingsComponent;
     juce::TextButton bleButton;

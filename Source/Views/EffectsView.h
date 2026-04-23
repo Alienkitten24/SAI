@@ -12,14 +12,14 @@
 class EffectsView : public juce::Component
 {
 public:
-    EffectsView (TestAudioProcessor&);
+    EffectsView (AudimoAudioProcessor&);
     ~EffectsView();
 
     void paint(juce::Graphics& g) override;
     void resized() override;
 
 private:
-    TestAudioProcessor& audioProcessor;
+    AudimoAudioProcessor& audioProcessor;
 
     juce::Label label;
 

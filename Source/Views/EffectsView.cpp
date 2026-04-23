@@ -1,6 +1,6 @@
 #include "EffectsView.h"
 
-EffectsView::EffectsView (TestAudioProcessor& p)
+EffectsView::EffectsView (AudimoAudioProcessor& p)
     : audioProcessor                (p), 
     gainComponent                   (p.getTreeState()),
     distortionComponent             (p.getTreeState()),

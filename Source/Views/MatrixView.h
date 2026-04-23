@@ -6,14 +6,14 @@
 class MatrixView : public juce::Component
 {
 public:
-    MatrixView (TestAudioProcessor&);
+    MatrixView (AudimoAudioProcessor&);
     ~MatrixView();
 
     void paint(juce::Graphics& g) override;
     void resized() override;
 
 private:
-    TestAudioProcessor& audioProcessor;
+    AudimoAudioProcessor& audioProcessor;
 
     juce::Label label;
 

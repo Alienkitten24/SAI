@@ -11,7 +11,7 @@
 
 
 //==============================================================================
-TestAudioProcessorEditor::TestAudioProcessorEditor (TestAudioProcessor& p)
+AudimoAudioProcessorEditor::AudimoAudioProcessorEditor (AudimoAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p), m_effectsView (p), m_matrixView (p), m_advancedView (p)
 {
     // Make sure that before the constructor has finished, you've set the
@@ -29,12 +29,12 @@ TestAudioProcessorEditor::TestAudioProcessorEditor (TestAudioProcessor& p)
     m_navBar.changeScreenFn = [this](const int id) { changeScreen(id); };
 }
 
-TestAudioProcessorEditor::~TestAudioProcessorEditor()
+AudimoAudioProcessorEditor::~AudimoAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void TestAudioProcessorEditor::paint (juce::Graphics& g)
+void AudimoAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
@@ -43,7 +43,7 @@ void TestAudioProcessorEditor::paint (juce::Graphics& g)
     g.setFont (juce::Font (15.0f));
 }
 
-void TestAudioProcessorEditor::resized()
+void AudimoAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
         
@@ -56,7 +56,7 @@ void TestAudioProcessorEditor::resized()
     m_advancedView.setBounds(bounds);
 }
 
-void TestAudioProcessorEditor::changeScreen(int screen_id)
+void AudimoAudioProcessorEditor::changeScreen(int screen_id)
 {
     m_effectsView.setVisible(screen_id == 0);
     m_matrixView.setVisible(screen_id == 1);

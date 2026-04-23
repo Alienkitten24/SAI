@@ -10,7 +10,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-TestAudioProcessor::TestAudioProcessor()
+AudimoAudioProcessor::AudimoAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -64,28 +64,28 @@ TestAudioProcessor::TestAudioProcessor()
     filterParamPointers.passTypeParam = m_treeState.getRawParameterValue(ParamIDs::Filter::PassType);
 }
 
-TestAudioProcessor::~TestAudioProcessor()
+AudimoAudioProcessor::~AudimoAudioProcessor()
 {
     m_bleManager.stop();
 }
 
 //==============================================================================
-SensorDataSnapshot TestAudioProcessor::getSensorDataCopy() const
+SensorDataSnapshot AudimoAudioProcessor::getSensorDataCopy() const
 {
     return m_sensorData.getCopy();
 }
 
-SensorData& TestAudioProcessor::getSensorData()
+SensorData& AudimoAudioProcessor::getSensorData()
 {
     return m_sensorData;
 }
 
-BLEManager& TestAudioProcessor::getBLEManager() 
+BLEManager& AudimoAudioProcessor::getBLEManager() 
 {
     return m_bleManager;
 }
 
-void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
+void AudimoAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
 {
     // Temporary storage and flags
     float tmpTime = 0.0f;
@@ -200,7 +200,7 @@ void TestAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
 
 }
 
-void TestAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
+void AudimoAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
 {
     auto addr = message.getAddressPattern().toString();
     if (addr == "/audimo/gest") {
@@ -212,18 +212,18 @@ void TestAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
 }
 
 //==============================================================================
-juce::AudioProcessorValueTreeState& TestAudioProcessor::getTreeState()
+juce::AudioProcessorValueTreeState& AudimoAudioProcessor::getTreeState()
 {
     return m_treeState;
 }
 
 //==============================================================================
-const juce::String TestAudioProcessor::getName() const
+const juce::String AudimoAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool TestAudioProcessor::acceptsMidi() const
+bool AudimoAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -232,7 +232,7 @@ bool TestAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool TestAudioProcessor::producesMidi() const
+bool AudimoAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -241,7 +241,7 @@ bool TestAudioProcessor::producesMidi() const
    #endif
 }
 
-bool TestAudioProcessor::isMidiEffect() const
+bool AudimoAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -250,37 +250,37 @@ bool TestAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double TestAudioProcessor::getTailLengthSeconds() const
+double AudimoAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int TestAudioProcessor::getNumPrograms()
+int AudimoAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int TestAudioProcessor::getCurrentProgram()
+int AudimoAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void TestAudioProcessor::setCurrentProgram (int index)
+void AudimoAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String TestAudioProcessor::getProgramName (int index)
+const juce::String AudimoAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void TestAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void AudimoAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void TestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void AudimoAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
@@ -295,14 +295,14 @@ void TestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     filterDsp.prepare(spec);
 }
 
-void TestAudioProcessor::releaseResources()
+void AudimoAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool TestAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool AudimoAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -327,7 +327,7 @@ bool TestAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) con
 }
 #endif
 
-void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void AudimoAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -398,25 +398,25 @@ void TestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
 }
 
 //==============================================================================
-bool TestAudioProcessor::hasEditor() const
+bool AudimoAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* TestAudioProcessor::createEditor()
+juce::AudioProcessorEditor* AudimoAudioProcessor::createEditor()
 {
-    return new TestAudioProcessorEditor (*this);
+    return new AudimoAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void TestAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void AudimoAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void TestAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void AudimoAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -426,5 +426,5 @@ void TestAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new TestAudioProcessor();
+    return new AudimoAudioProcessor();
 }

@@ -2,7 +2,7 @@
 
 #include <thread>
 
-AdvancedView::AdvancedView (TestAudioProcessor& p)
+AdvancedView::AdvancedView (AudimoAudioProcessor& p)
     : audioProcessor (p)
 {   
     // allows bleSettingsComponent to listen to blemanager errors

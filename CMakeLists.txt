@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.15)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-project(test VERSION 0.0.1)
+project(Audimo VERSION 0.0.1)
 
 
 set(JUCE_PATH "C:/JUCE")  # your JUCE path
 add_subdirectory(${JUCE_PATH} JUCE)
 
-juce_add_plugin(test
+juce_add_plugin(Audimo
     COMPANY_NAME "MyCompany"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
@@ -17,11 +17,11 @@ juce_add_plugin(test
     PLUGIN_MANUFACTURER_CODE Juce
     PLUGIN_CODE MyPl
     FORMATS VST3 Standalone
-    PRODUCT_NAME "test")
+    PRODUCT_NAME "Audimo")
 
-juce_generate_juce_header(test)
+juce_generate_juce_header(Audimo)
 
-target_sources(test PRIVATE
+target_sources(Audimo PRIVATE
     # --- BASE ---------------------------------------
     Source/PluginProcessor.h
     Source/PluginProcessor.cpp
@@ -111,13 +111,13 @@ target_sources(test PRIVATE
 )
 
 # Ensure VST2 is OFF
-target_compile_definitions(test 
+target_compile_definitions(Audimo 
     PUBLIC
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
-target_link_libraries(test
+target_link_libraries(Audimo
     PRIVATE
         juce::juce_audio_utils
         juce::juce_audio_devices
@@ -130,4 +130,4 @@ target_link_libraries(test
         
 
 find_package(simpleble REQUIRED CONFIG)
-target_link_libraries(test PRIVATE simpleble::simpleble)
+target_link_libraries(Audimo PRIVATE simpleble::simpleble)

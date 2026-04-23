@@ -16,18 +16,18 @@
 #include "Views/MatrixView.h"
 #include "Views/AdvancedView.h"
 
-class TestAudioProcessorEditor  : public juce::AudioProcessorEditor 
+class AudimoAudioProcessorEditor  : public juce::AudioProcessorEditor 
 {
 public:
-    TestAudioProcessorEditor (TestAudioProcessor&);
-    ~TestAudioProcessorEditor() override;
+    AudimoAudioProcessorEditor (AudimoAudioProcessor&);
+    ~AudimoAudioProcessorEditor() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    TestAudioProcessor& audioProcessor;
+    AudimoAudioProcessor& audioProcessor;
 
     NavBar m_navBar;
     EffectsView m_effectsView;
@@ -37,5 +37,5 @@ private:
     void changeScreen(int screen_id);
 
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TestAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudimoAudioProcessorEditor)
 };
