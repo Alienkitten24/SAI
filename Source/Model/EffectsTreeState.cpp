@@ -17,7 +17,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Gain::Active, "Active", false
         ));
         gainGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Gain::Gain, "Gain", -60.0f, 0.0f, -6.0f
+            ParamIDs::Gain::Gain, "Gain", -60.0f, 6.0f, 0.0f
         ));
 
 
@@ -31,7 +31,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Distortion::Drive, "Drive", 0.0f, 40.0f, 10.0f
         ));
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Distortion::PostGain, "Post Gain", -60.0f, 0.0f, -6.0f
+            ParamIDs::Distortion::PostGain, "Post Gain", -60.0f, 6.0f, 0.0f
         ));
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Distortion::Mix, "Mix", 0.0f, 1.0f, 1.0f
