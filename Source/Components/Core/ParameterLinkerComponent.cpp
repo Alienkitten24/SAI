@@ -1,8 +1,13 @@
 #include "ParameterLinkerComponent.h"
+#include "KnobComponent.h"
 
-ParameterLinkerComponent::ParameterLinkerComponent()
+ParameterLinkerComponent::ParameterLinkerComponent(juce::AudioProcessorValueTreeState& treeState, const juce::String& propertyName)
+    : treeState(treeState), propertyName(propertyName)
 {
     setSize(SIZE, SIZE);
+    addAndMakeVisible(label);
+    label.setJustificationType(juce::Justification::centred);
+    label.setFont(10.0f);
 }
 
 ParameterLinkerComponent::~ParameterLinkerComponent()
@@ -11,32 +16,49 @@ ParameterLinkerComponent::~ParameterLinkerComponent()
 
 void ParameterLinkerComponent::paint(juce::Graphics& g)
 {
-    // Draw square background
-    g.setColour(juce::Colours::darkgrey);
-    g.drawRect(getLocalBounds(), STROKE_WIDTH);
+    auto bounds = getLocalBounds().toFloat();
 
-    // Draw plus sign (+) centered in the square
-    auto bounds = getLocalBounds().reduced(STROKE_WIDTH + 2);
-
-    g.setColour(juce::Colours::white);
-    g.setFont(18.0f);
-    g.drawText("+", bounds, juce::Justification::centred, true);
+    // Background circle
+    g.setColour(isDragging ? juce::Colours::deepskyblue : juce::Colours::cornflowerblue);
+    g.fillEllipse(bounds);
 }
 
 void ParameterLinkerComponent::resized()
 {
 }
 
+void ParameterLinkerComponent::mouseDown(const juce::MouseEvent& e)
+{
+    isDragging = false;
+}
+
 void ParameterLinkerComponent::mouseDrag(const juce::MouseEvent& e)
 {
-    // if (auto* container = juce::DragAndDropContainer::findParentDragContainerFor(this)) {
-    //     container->startDragging("ParameterLink", this);  // description + source component
-    // }
+    if (!isDragging) {
+        isDragging = true;
+
+        if (e.getDistanceFromDragStart() > 5) {
+            if (auto* container = juce::DragAndDropContainer::findParentDragContainerFor(this)) {
+                container->startDragging("ParameterLink", this);  // description + source component
+            }
+        }
+    }
+}
+
+void ParameterLinkerComponent::mouseUp(const juce::MouseEvent& e)
+{
+    isDragging = false;
+    repaint();
 }
 
 void ParameterLinkerComponent::setTarget(KnobComponent* knob)
 {
     targetKnob = knob;
+    if (knob) {
+        juce::String id = knob->getParamID();
+        treeState.state.setProperty(propertyName, id, nullptr);
+        label.setText(id, juce::dontSendNotification);
+    }
     repaint();
 }
 

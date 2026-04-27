@@ -100,6 +100,8 @@ target_sources(Audimo PRIVATE
     Source/Components/Core/KnobComponent.cpp
     Source/Components/Core/ComboBoxComponent.h
     Source/Components/Core/ComboBoxComponent.cpp
+    Source/Components/Core/ParameterLinkerComponent.h
+    Source/Components/Core/ParameterLinkerComponent.cpp
     
     # --- NAVIGATION ---
     Source/Components/Navigation/NavBar.h

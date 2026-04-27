@@ -1,9 +1,11 @@
 #include "KnobComponent.h"
+#include "ParameterLinkerComponent.h"
 
 KnobComponent::KnobComponent(
     const juce::String& text,
     juce::AudioProcessorValueTreeState& treeState,
-    const juce::String& paramID)
+    const juce::String& paramID_)
+    : paramID(paramID_), parameter(treeState.getParameter(paramID_))
 {
     label.setText(text, juce::dontSendNotification);
     label.setJustificationType(juce::Justification::centred);
@@ -11,15 +13,11 @@ KnobComponent::KnobComponent(
 
     slider.setSliderStyle(juce::Slider::SliderStyle::Rotary);
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 25);
-    // slider.setRange(0.0, 100.0, 0.1); 
     addAndMakeVisible(slider);
-
-    parameter = treeState.getParameter(paramID);
     
     attachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
-        treeState, paramID, slider
+        treeState, paramID_, slider
     );
-
 }
 
 KnobComponent::~KnobComponent()
@@ -40,12 +38,19 @@ void KnobComponent::resized()
     slider.setBounds(bounds);
 }
 
-juce::Slider& KnobComponent::getSlider()
+bool KnobComponent::isInterestedInDragSource(const SourceDetails& details)
 {
-    return slider;
+    return details.description == "ParameterLink";
 }
 
-juce::RangedAudioParameter* KnobComponent::getParameter()
+void KnobComponent::itemDropped(const SourceDetails& details)
 {
-    return parameter;
+    if (auto* source = dynamic_cast<ParameterLinkerComponent*>(details.sourceComponent.get())) {
+        source->setTarget(this); 
+    }
+}
+
+juce::String KnobComponent::getParamID() const
+{
+    return paramID;
 }

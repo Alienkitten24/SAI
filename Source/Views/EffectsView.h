@@ -9,7 +9,8 @@
 #include "../Components/Motions/ProportionalControllerComponent.h"
 #include "../Components/Motions/ThresholdControllerComponent.h"
 
-class EffectsView : public juce::Component
+class EffectsView : public juce::Component, 
+                    public juce::DragAndDropContainer
 {
 public:
     EffectsView (AudimoAudioProcessor&);

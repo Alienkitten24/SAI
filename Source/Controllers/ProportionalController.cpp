@@ -26,6 +26,7 @@ void ProportionalController::process()
     if (targetParam)
     {
         float x = static_cast<float>(sensorData.proximity);
+        // float x = static_cast<float>(sensorData lastSensorDataType);
         float y = juce::jmap(x, minimum, maximum, 0.0f, 1.0f);
 
         targetParam->beginChangeGesture();

@@ -32,7 +32,8 @@
 //==============================================================================
 /**
 */
-class AudimoAudioProcessor  : public juce::AudioProcessor
+class AudimoAudioProcessor  : public juce::AudioProcessor,
+                             public juce::ValueTree::Listener
 {
 public:
     //==============================================================================
@@ -81,6 +82,9 @@ public:
 
     //==============================================================================
     juce::AudioProcessorValueTreeState& getTreeState();
+
+    // ValueTree::Listener override
+    void valueTreePropertyChanged(juce::ValueTree& tree, const juce::Identifier& property) override;
 
 private:
     //==============================================================================

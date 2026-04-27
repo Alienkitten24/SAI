@@ -61,6 +61,11 @@ namespace ParamIDs {
         inline constexpr auto Modifier = "threshold_modifier";
     }
 
+    namespace Linker {
+        inline constexpr auto Proportional = "linker_proportional";
+        inline constexpr auto Threshold = "linker_threshold";
+    }
+
     namespace Sensor {
         inline const juce::StringArray SensorDataStrings { 
             "Proximity", 

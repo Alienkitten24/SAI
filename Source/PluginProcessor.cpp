@@ -62,10 +62,16 @@ AudimoAudioProcessor::AudimoAudioProcessor()
     filterParamPointers.driveParam = m_treeState.getRawParameterValue(ParamIDs::Filter::Drive);
     filterParamPointers.slopeTypeParam = m_treeState.getRawParameterValue(ParamIDs::Filter::SlopeType);
     filterParamPointers.passTypeParam = m_treeState.getRawParameterValue(ParamIDs::Filter::PassType);
+
+    // Set up default linked parameters and listen for changes
+    m_treeState.state.setProperty(ParamIDs::Linker::Proportional, "none", nullptr);
+    m_treeState.state.setProperty(ParamIDs::Linker::Threshold, "none", nullptr);
+    m_treeState.state.addListener(this);
 }
 
 AudimoAudioProcessor::~AudimoAudioProcessor()
 {
+    m_treeState.state.removeListener(this);
     m_bleManager.stop();
 }
 
@@ -215,6 +221,28 @@ void AudimoAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
 juce::AudioProcessorValueTreeState& AudimoAudioProcessor::getTreeState()
 {
     return m_treeState;
+}
+
+void AudimoAudioProcessor::valueTreePropertyChanged(juce::ValueTree& tree, const juce::Identifier& property)
+{
+    if (property == juce::Identifier(ParamIDs::Linker::Proportional))
+    {
+        auto paramID = tree.getProperty(ParamIDs::Linker::Proportional).toString();
+        if (paramID != "none")
+        {
+            auto* param = m_treeState.getParameter(paramID);
+            proportionalController.setTargetParameter(param);
+        }
+    }
+    else if (property == juce::Identifier(ParamIDs::Linker::Threshold))
+    {
+        auto paramID = tree.getProperty(ParamIDs::Linker::Threshold).toString();
+        if (paramID != "none")
+        {
+            auto* param = m_treeState.getParameter(paramID);
+            thresholdController.setTargetParameter(param);
+        }
+    }
 }
 
 //==============================================================================
@@ -385,9 +413,6 @@ void AudimoAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     // can use unique contexts for parallel processing (ex wet/dry knob)
     // TODO rn this is all sequential -> unintended effect gainParam is change Distortion's drive
 
-
-    proportionalController.setTargetParameter(m_treeState.getParameter(ParamIDs::Gain::Gain));
-    thresholdController.setTargetParameter(m_treeState.getParameter(ParamIDs::Gain::Gain));
     if (proportionalParams.active)    proportionalController.process();
     if (thresholdParams.active)       thresholdController.process();
 
