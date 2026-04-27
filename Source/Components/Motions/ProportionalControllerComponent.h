@@ -16,10 +16,10 @@ public:
     void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:
+    ParameterLinkerComponent linker { treeState, ParamIDs::Linker::Proportional };
     ComboBoxComponent sensorDataTypeComboBox { treeState, ParamIDs::Proportional::SensorDataType };
     KnobComponent minKnob { "Minimum", treeState, ParamIDs::Proportional::Minimum };
     KnobComponent maxKnob { "Maximum", treeState, ParamIDs::Proportional::Maximum };
-    ParameterLinkerComponent linker { treeState, ParamIDs::Linker::Proportional };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProportionalControllerComponent)
 };

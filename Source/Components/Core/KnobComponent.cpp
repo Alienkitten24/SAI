@@ -1,4 +1,5 @@
 #include "KnobComponent.h"
+#include "EllipseComponent.h"
 #include "ParameterLinkerComponent.h"
 
 KnobComponent::KnobComponent(
@@ -46,7 +47,14 @@ bool KnobComponent::isInterestedInDragSource(const SourceDetails& details)
 void KnobComponent::itemDropped(const SourceDetails& details)
 {
     if (auto* source = dynamic_cast<ParameterLinkerComponent*>(details.sourceComponent.get())) {
-        source->setTarget(this); 
+        source->setTarget(this);
+        return;
+    }
+
+    if (auto* ellipseSource = dynamic_cast<EllipseComponent*>(details.sourceComponent.get())) {
+        if (auto* parentSource = dynamic_cast<ParameterLinkerComponent*>(ellipseSource->getParentComponent())) {
+            parentSource->setTarget(this);
+        }
     }
 }
 
