@@ -34,7 +34,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Distortion::PostGain, "Post Gain", -60.0f, 6.0f, 0.0f
         ));
         distortionGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Distortion::Mix, "Mix", 0.0f, 1.0f, 1.0f
+            ParamIDs::Distortion::Mix, "Mix", 0.0f, 1.0f, 0.5f
         ));
         // TODO maybe move this stringarray declaration 
         distortionGroup->addChild(std::make_unique<juce::AudioParameterChoice>(
@@ -51,7 +51,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Delay::Feedback, "Feedback", 0.0f, 1.0f, 0.7f 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Delay::Mix, "Mix", 0.0f, 1.0f, 1.0f 
+            ParamIDs::Delay::Mix, "Mix", 0.0f, 1.0f, 0.5f 
         ));
         delayGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Delay::DelayMsL, "Delay Ms L", 0.0f, 1000.0f, 250.0f 
@@ -76,7 +76,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Filter::Active, "Active", false 
         ));
         filterGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Filter::Mix, "Mix", 0.0f, 1.0f, 1.0f
+            ParamIDs::Filter::Mix, "Mix", 0.0f, 1.0f, 0.5f
         ));
         auto cutoffRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f);
         cutoffRange.setSkewForCentre(1000.0f);

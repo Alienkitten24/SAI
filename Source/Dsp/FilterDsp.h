@@ -17,12 +17,18 @@ public:
     void update(const FilterParams& p);
 
 private:
+    void setIIRCoefficients();
+    void setSlopeType(int type);
+    void setPassType(int type);
 
     double sampleRate;
 
+    float cutoff;
+    float resonance;
+
     juce::dsp::ProcessorDuplicator<
         juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>
-    > iirFilter;
+    > iirFilter1, iirFilter2;
 
     juce::dsp::Gain<float> drive;
     juce::dsp::DryWetMixer<float> dryWet;
