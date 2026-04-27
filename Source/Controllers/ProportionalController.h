@@ -15,12 +15,14 @@ public:
     void process();
     void setTargetParameter(juce::RangedAudioParameter* param);
 
+private:
+    float ComputeTargetValue();
     void setSensorDataType(int type);
 
-private:
     juce::RangedAudioParameter* targetParam = nullptr;
 
     SensorDataSnapshot sensorData;
+    int sensorDataType;
     int lastSensorDataType;     
 
     float minimum;

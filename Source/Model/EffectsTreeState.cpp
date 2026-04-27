@@ -106,10 +106,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Proportional::SensorDataType, "Sensor Data Type", ParamIDs::Sensor::SensorDataStrings, 0
         ));
         proportionalGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Proportional::Minimum, "Minimum", 0.0f, 65535.0f, 2000.0f
+            ParamIDs::Proportional::Minimum, "Minimum", 0.0f, 1.0f, 0.5f
         ));
         proportionalGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Proportional::Maximum, "Maximum", 0.0f, 65535.0f, 8000.0f
+            ParamIDs::Proportional::Maximum, "Maximum", 0.0f, 1.0f, 0.5f
         ));
         proportionalGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
             ParamIDs::Proportional::Multiplier, "Multiplier", 0.0f, 10.0f, 1.0f
