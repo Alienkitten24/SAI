@@ -125,10 +125,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             ParamIDs::Threshold::SensorDataType, "Sensor Data Type", ParamIDs::Sensor::SensorDataStrings, 0
         ));
         thresholdGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Threshold::Threshold, "Threshold", 0.0f, 65535.0f, 2000.0f
+            ParamIDs::Threshold::Threshold, "Threshold", 0.0f, 1.0f, 0.5f
         ));
         thresholdGroup->addChild(std::make_unique<juce::AudioParameterFloat>(
-            ParamIDs::Threshold::Modifier, "Modifier", 0.0f, 65535.0f, 2000.0f
+            ParamIDs::Threshold::Modifier, "Modifier", 0.0f, 1.0f, 0.5f
         ));
     
     params.push_back(std::move(gainGroup));

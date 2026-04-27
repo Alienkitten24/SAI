@@ -15,16 +15,27 @@ public:
     void process();
     void setTargetParameter(juce::RangedAudioParameter* param);
 
-    void setSensorDataType(int type);
 
 private:
+    void computeMomentary(float x, float mappedThreshold);
+    void computeLatch(float x, float mappedThreshold);
+    void setParameterValue(float y);
+    void setSensorDataType(int type);
+    void setThresholdType(int type);
+
     juce::RangedAudioParameter* targetParam = nullptr;
 
     SensorDataSnapshot sensorData;
-    int lastSensorDataType;     
+    int sensorDataType = SensorDataType::PROXIMITY;
+    int lastSensorDataType = -1;     
 
-    float threshold;
-    float modifier;
+    // int lastType = ThresholdType::MOMENTARY;
+
+    float threshold = 0.0f;
+    float modifier = 0.0f;
+
+    // float valueBeforeJump = 0.0f;
+    // bool isAboveThreshold = false; 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ThresholdController)
 };
