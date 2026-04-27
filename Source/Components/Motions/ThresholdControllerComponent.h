@@ -4,6 +4,7 @@
 #include "ParameterControllerComponent.h"
 #include "../Core/KnobComponent.h"
 #include "../Core/ComboBoxComponent.h"
+#include "../Core/ParameterLinkerComponent.h"
 
 class ThresholdControllerComponent : public ParameterControllerComponent
 {
@@ -15,6 +16,7 @@ public:
     void layoutMainContent(juce::Rectangle<int> bounds) override;
 
 private:
+    ParameterLinkerComponent linker { treeState, ParamIDs::Linker::Threshold };
     ComboBoxComponent sensorDataTypeComboBox { treeState, ParamIDs::Threshold::SensorDataType };
     KnobComponent thresholdKnob { "Threshold", treeState, ParamIDs::Threshold::Threshold };
     KnobComponent modifierKnob { "Modifier", treeState, ParamIDs::Threshold::Modifier };

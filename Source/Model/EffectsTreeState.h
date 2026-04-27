@@ -16,54 +16,54 @@ namespace GroupIDs {
 
 namespace ParamIDs {
     namespace Gain {
-        inline constexpr auto Active = "gain_active";
-        inline constexpr auto Gain = "gain_gain";
+        inline constexpr auto Active = "Gain - Active";
+        inline constexpr auto Gain = "Gain - Gain";
     };
     namespace Distortion {
-        inline constexpr auto Active = "dist_active";
-        inline constexpr auto Drive = "dist_drive";
-        inline constexpr auto PostGain = "dist_postGain";
-        inline constexpr auto Mix = "dist_mix";
-        inline constexpr auto Type = "dist_type";
+        inline constexpr auto Active = "Distortion - Active";
+        inline constexpr auto Drive = "Distortion - Drive";
+        inline constexpr auto PostGain = "Distortion - Post Gain";
+        inline constexpr auto Mix = "Distortion - Mix";
+        inline constexpr auto Type = "Distortion - Type";
     };
     namespace Delay {
-        inline constexpr auto Active = "delay_active";
-        inline constexpr auto Feedback = "delay_feedback";
-        inline constexpr auto Mix = "delay_mix";
-        inline constexpr auto DelayMsL = "delay_delayMsL";
-        inline constexpr auto DelayMsR = "delay_delayMsR";
-        inline constexpr auto DelayType = "delay_delayType";
-        // inline constexpr auto TempoType = "delay_tempoType";
-        // inline constexpr auto Division = "delay_division";
+        inline constexpr auto Active = "Delay - Active";
+        inline constexpr auto Feedback = "Delay - Feedback";
+        inline constexpr auto Mix = "Delay - Mix";
+        inline constexpr auto DelayMsL = "Delay - Delay Ms L";
+        inline constexpr auto DelayMsR = "Delay - Delay Ms R";
+        inline constexpr auto DelayType = "Delay - Delay Type";
+        // inline constexpr auto TempoType = "Delay - Tempo Type";
+        // inline constexpr auto Division = "Delay - Division";
     };
     namespace Filter {
-        inline constexpr auto Active = "filter_active";
-        inline constexpr auto Mix = "filter_mix";
-        inline constexpr auto Cutoff = "filter_cutoff";
-        inline constexpr auto Resonance = "filter_resonance";
-        inline constexpr auto Drive = "filter_drive"; 
-        inline constexpr auto SlopeType = "filter_slopeType"; 
-        inline constexpr auto PassType = "filter_passType"; 
-        // inline constexpr auto FilterType = "filter_filterType"; // ladder, svf, iir, fir
+        inline constexpr auto Active = "Filter - Active";
+        inline constexpr auto Mix = "Filter - Mix";
+        inline constexpr auto Cutoff = "Filter - Cutoff";
+        inline constexpr auto Resonance = "Filter - Resonance";
+        inline constexpr auto Drive = "Filter - Drive"; 
+        inline constexpr auto SlopeType = "Filter - Slope Type"; 
+        inline constexpr auto PassType = "Filter - Pass Type"; 
+        // inline constexpr auto FilterType = "Filter - Filter Type"; // ladder, svf, iir, fir
     }
 
     namespace Proportional {
-        inline constexpr auto Active = "proportional_active";
-        inline constexpr auto SensorDataType = "proportional_sensorDataType";
-        inline constexpr auto Minimum = "proportional_minimum";
-        inline constexpr auto Maximum = "proportional_maximum";
-        inline constexpr auto Multiplier = "proportional_multiplier";
+        inline constexpr auto Active = "Proportional - Active";
+        inline constexpr auto SensorDataType = "Proportional - Sensor Data Type";
+        inline constexpr auto Minimum = "Proportional - Minimum";
+        inline constexpr auto Maximum = "Proportional - Maximum";
+        inline constexpr auto Multiplier = "Proportional - Multiplier";
     }
     namespace Threshold {
-        inline constexpr auto Active = "threshold_active";
-        inline constexpr auto SensorDataType = "threshold_sensorDataType";
-        inline constexpr auto Threshold = "threshold_threshold";
-        inline constexpr auto Modifier = "threshold_modifier";
+        inline constexpr auto Active = "Threshold - Active";
+        inline constexpr auto SensorDataType = "Threshold - Sensor Data Type";
+        inline constexpr auto Threshold = "Threshold - Threshold";
+        inline constexpr auto Modifier = "Threshold - Modifier";
     }
 
     namespace Linker {
-        inline constexpr auto Proportional = "linker_proportional";
-        inline constexpr auto Threshold = "linker_threshold";
+        inline constexpr auto Proportional = "Linker - Proportional";
+        inline constexpr auto Threshold = "Linker - Threshold";
     }
 
     namespace Sensor {
