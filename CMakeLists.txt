@@ -3,12 +3,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(Audimo VERSION 0.0.1)
 
-
-set(JUCE_PATH "C:/JUCE")  # your JUCE path
+set(JUCE_PATH "C:/JUCE") # your JUCE path
 add_subdirectory(${JUCE_PATH} JUCE)
+        
+find_package(simpleble REQUIRED CONFIG) # link simpleble
+target_link_libraries(Audimo PRIVATE simpleble::simpleble)
 
 juce_add_plugin(Audimo
-    COMPANY_NAME "MyCompany"
+    COMPANY_NAME "Audimo"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
@@ -121,6 +123,7 @@ target_compile_definitions(Audimo
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
+# link juce modules
 target_link_libraries(Audimo
     PRIVATE
         juce::juce_audio_utils
@@ -131,7 +134,3 @@ target_link_libraries(Audimo
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
-        
-
-find_package(simpleble REQUIRED CONFIG)
-target_link_libraries(Audimo PRIVATE simpleble::simpleble)
