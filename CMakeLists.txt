@@ -6,9 +6,6 @@ project(Audimo VERSION 0.0.1)
 set(JUCE_PATH "C:/JUCE") # your JUCE path
 add_subdirectory(${JUCE_PATH} JUCE)
         
-find_package(simpleble REQUIRED CONFIG) # link simpleble
-target_link_libraries(Audimo PRIVATE simpleble::simpleble)
-
 juce_add_plugin(Audimo
     COMPANY_NAME "Audimo"
     IS_SYNTH FALSE
@@ -134,3 +131,6 @@ target_link_libraries(Audimo
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+find_package(simpleble REQUIRED CONFIG) # link simpleble
+target_link_libraries(Audimo PRIVATE simpleble::simpleble)
