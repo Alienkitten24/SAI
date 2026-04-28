@@ -36,12 +36,12 @@ cmake -B Builds
 cmake --build Builds --config Release
 ```
 
-This will build the standalone executable to ".\Builds\Audimo_artefacts\Release\Standalone\Audimo.exe" and the vst3 file to ".\Builds\Audimo_artefacts\Release\VST3\Audimo.vst3\Contents\x86_64-win"
+This will build the standalone executable to ".\Builds\Audimo_artefacts\Release\Standalone\Audimo.exe" and the vst3 file to ".\Builds\Audimo_artefacts\Release\VST3\Audimo.vst3\Contents\x86_64-win\Audimo.vst3"
 
 ## Credits
 
-Jennifer Tsai: Lead Hardware Engineer
+Jennifer Tsai: Chief Hardware Engineer
 
-Felix Iov: Lead Software Engineer
+Felix Iov: Chief Software Engineer
 
 Dr. Ben Whiting & Dr. Ran Yang: Advisorary Roles
