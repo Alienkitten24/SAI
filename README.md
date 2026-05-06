@@ -20,7 +20,7 @@ Download and install JUCE [here](https://juce.com/download), or build with CMake
 
 2. [SimpleBLE](https://github.com/simpleble/simpleble): Used for bluetooth communication
 
-Clone the SimpleBLE. Install using CMake. 
+Clone the SimpleBLE repo. Install using CMake. 
 
 ```bash
 cmake -S [path-to-simpleble] -B [path-to-build]
