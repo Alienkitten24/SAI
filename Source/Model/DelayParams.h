@@ -26,26 +26,26 @@ struct DelayParamPointers {
 };
 
 enum DelayType {
-    MONO = 0,
-    STEREO = 1,
-    PINGPONG = 2
+    MONO,
+    STEREO,
+    PINGPONG
 };
 
 // enum TempoType {
-//     MILLISECONDS = 0,
-//     STRAIGHT = 1,
-//     DOTTED = 2,
-//     TRIPLET = 3
+//     MILLISECONDS,
+//     STRAIGHT,
+//     DOTTED,
+//     TRIPLET
 // }
 
 // enum Division {
-//     SIXTYFOURTH = 0,
-//     THIRTYSECOND = 1,
-//     SIXTEENTH = 2,
-//     EIGHTH = 3,
-//     QUARTER = 4,
-//     HALF = 5,
-//     WHOLE = 6
+//     SIXTYFOURTH,
+//     THIRTYSECOND,
+//     SIXTEENTH,
+//     EIGHTH,
+//     QUARTER,
+//     HALF,
+//     WHOLE
 //     // DOUBLEWHOLE
 //     // QUADWHOLE
 // }

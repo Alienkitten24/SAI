@@ -17,15 +17,6 @@ public:
     void update(const DelayParams& p);
 
 private:
-    // delay time in seconds or bpm tempo 
-        // sync
-    // feedback aka decay rate
-    // mix
-    // pre/postGain ?
-    // filter
-    // type: mono, stereo, pingpong
-    // maybe: pitch modulation, pan, slight distortion
-
     void processMono(juce::dsp::ProcessContextReplacing<float>& context);
     void processStereo(juce::dsp::ProcessContextReplacing<float>& context);
     void processPingPong(juce::dsp::ProcessContextReplacing<float>& context);
@@ -44,6 +35,7 @@ private:
     int delayType = DelayType::MONO;
     int lastDelayType = DelayType::MONO;
 
+    // TODO add support for tempo type (synced to bpm or not) and division
     // int tempoType = TempoType::STRAIGHT;
     // int lastTempoType = TempoType::STRAIGHT;
 

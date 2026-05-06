@@ -3,17 +3,17 @@
 #include <JuceHeader.h>
 
 enum SensorDataType {
-    PROXIMITY = 0,
-    ACCELERATIONX = 1,
-    ACCELERATIONY = 2,
-    ACCELERATIONZ = 3,
-    GYROX = 4,
-    GYROY = 5,
-    GYROZ = 6,
-    EULERX = 7,
-    EULERY = 8,
-    EULERZ = 9,
-    MICRMS = 10
+    PROXIMITY,
+    ACCELERATIONX,
+    ACCELERATIONY,
+    ACCELERATIONZ,
+    GYROX,
+    GYROY,
+    GYROZ,
+    EULERX,
+    EULERY,
+    EULERZ,
+    MICRMS
 };
 
 

@@ -26,8 +26,5 @@ void GainDsp::reset()
 
 void GainDsp::update(const GainParams& p)
 {
-    // if audioblock is needed to do custom algos/math
-    // auto& block = context.getInputBlock();
-
     gain.setGainDecibels(p.gain);
 }

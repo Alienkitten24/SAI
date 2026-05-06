@@ -2,12 +2,9 @@
 
 NavBar::NavBar()
 {
-    // theoretically screen_ids should be an enum
-
-    initButton(effectsViewButton, "Effects", 0);
-    initButton(matrixViewButton, "Matrix", 1);
-    initButton(advancedViewButton, "Advanced", 2);
-
+    initButton(effectsViewButton, "Effects", ScreenIDs::EFFECTS);
+    initButton(matrixViewButton, "Matrix", ScreenIDs::MATRIX);
+    initButton(advancedViewButton, "Advanced", ScreenIDs::ADVANCED);
 }
 
 NavBar::~NavBar()
@@ -39,7 +36,6 @@ void NavBar::paint(juce::Graphics& g)
     // Find the active button and draw the highlight underline
     g.setColour(juce::Colours::orange);
     
-
     // TODO make this reactive and make it so effectsview is highlighted on startup
     if (effectsViewButton.getToggleState()) 
         g.fillRect(effectsViewButton.getBounds().removeFromBottom(3));
@@ -52,10 +48,10 @@ void NavBar::paint(juce::Graphics& g)
 void NavBar::resized()
 {
     // Consider: making this into a flexbox 
-    auto area = getLocalBounds();
-    auto buttonWidth = area.getWidth() / 3; // 3 bc theres 3 buttons
+    auto bounds = getLocalBounds();
+    auto buttonWidth = bounds.getWidth() / 3; 
 
-    effectsViewButton.setBounds(area.removeFromLeft(buttonWidth));
-    matrixViewButton.setBounds(area.removeFromLeft(buttonWidth));
-    advancedViewButton.setBounds(area); // Take whatever is left
+    effectsViewButton.setBounds(bounds.removeFromLeft(buttonWidth));
+    matrixViewButton.setBounds(bounds.removeFromLeft(buttonWidth));
+    advancedViewButton.setBounds(bounds);
 }

@@ -1,5 +1,9 @@
 #include "MatrixView.h"
 
+// TODO implement everything
+// idea is to list connections like "Parameter Controller -- Gain - Gain"
+// might be obsolete due to labels within the controllers
+
 MatrixView::MatrixView (AudimoAudioProcessor& p)
     : audioProcessor (p)
 {   

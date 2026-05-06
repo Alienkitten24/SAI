@@ -21,16 +21,8 @@ OSCBridge::~OSCBridge()
 {
 }
 
-// forwardSensors()
-// forwardGesture()
-// or foward() { if size: encodeGest() else: encodeSensors()}
 void OSCBridge::forward(const std::vector<uint8_t>& bytes)
 {
-    // std::cout << " START " << std::endl;
-    // for (auto b : bytes) {
-    //     printf("%02x ", b);
-    // }
-    // std::cout << " END " << std::endl;
 
     // get the bytes for each data point 
     std::span<const uint8_t> bytesTime = std::span(bytes).subspan(0,4);
@@ -69,7 +61,7 @@ void OSCBridge::forward(const std::vector<uint8_t>& bytes)
     juce::OSCMessage msgGyro = juce::OSCMessage("/audimo/gyro");
     juce::OSCMessage msgEuler = juce::OSCMessage("/audimo/euler");
     juce::OSCMessage msgMicRms = juce::OSCMessage("/audimo/mic");
-    juce::OSCMessage msgGest = juce::OSCMessage("/audimo/gest");
+    // juce::OSCMessage msgGest = juce::OSCMessage("/audimo/gest");
 
     // populate arguments
     msgTime.addFloat32(time);
@@ -96,6 +88,5 @@ void OSCBridge::forward(const std::vector<uint8_t>& bytes)
     bundle.addElement(msgMicRms);
     // bundle.addElement(msgGest);
 
-    // send
     sender.send(bundle); 
 }

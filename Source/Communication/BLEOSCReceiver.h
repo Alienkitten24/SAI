@@ -13,7 +13,6 @@ public:
     bool start(int port = 9001);
     void stop();
 
-    // Callback invoked when a bundle is received (optional)
     std::function<void(const juce::OSCBundle&)> onBundleReceived;
     std::function<void(const juce::OSCMessage&)> onMessageReceived;
 

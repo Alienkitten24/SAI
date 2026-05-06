@@ -92,13 +92,6 @@ void ThresholdController::process()
     }
     mappedThreshold = juce::jmap(threshold, 0.0f, 1.0f, sensorMin, sensorMax);
 
-    // if (lastType == ThresholdType::MOMENTARY) {
-    //     computeMomentary(x, mappedThreshold);
-    // }
-    // else if (lastType == ThresholdType::LATCH) {
-    //     computeLatch(x, mappedThreshold);
-    // }
-
     computeLatch(x, mappedThreshold);
 }
 
@@ -107,26 +100,8 @@ void ThresholdController::setTargetParameter(juce::RangedAudioParameter* param)
     targetParam = param;
 }
 
+// TODO make a second mode where if above threshold it activates and when it drops back below it deactivates
 // void ThresholdController::computeMomentary(float x, float mappedThreshold)
-// {
-//     float cur, y;
-//     cur = targetParam->getValue();
-
-//     if (x > mappedThreshold) {
-//         if (!isAboveThreshold) {
-//             valueBeforeJump = cur;
-//             isAboveThreshold = true;
-//         }
-
-//         y = modifier;
-//     }
-//     else {
-//         isAboveThreshold = false;
-//         y = valueBeforeJump;
-//     }
-
-//     setParameterValue(y);
-// }
 
 void ThresholdController::computeLatch(float x, float mappedThreshold)
 {

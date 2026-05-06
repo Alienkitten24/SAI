@@ -19,17 +19,6 @@ public:
     void update(const DistortionParams& p);
 
 private:
-    // pregain
-    // postgain
-    // drive
-    // mix
-    // prefilter
-    // postfilter
-    // oversampling
-    // Waveshaper -> clipping, bitcrush
-    // asymetry/bias
-    // threshold
-
     void setWaveshaper(int type);
 
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
@@ -43,11 +32,6 @@ private:
     juce::dsp::WaveShaper<float> waveshaper;
 
     juce::dsp::DryWetMixer<float> dryWet;
-
-    // juce::SmoothedValue<float> driveSmoothed;
-    // juce::SmoothedValue<float> postSmoothed;
-    // juce::SmoothedValue<float> mixSmoothed;
-
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionDsp)
 };

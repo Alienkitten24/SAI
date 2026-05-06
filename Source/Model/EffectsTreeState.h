@@ -18,14 +18,14 @@ namespace ParamIDs {
     namespace Gain {
         inline constexpr auto Active = "Gain - Active";
         inline constexpr auto Gain = "Gain - Gain";
-    };
+    }
     namespace Distortion {
         inline constexpr auto Active = "Distortion - Active";
         inline constexpr auto Drive = "Distortion - Drive";
         inline constexpr auto PostGain = "Distortion - Post Gain";
         inline constexpr auto Mix = "Distortion - Mix";
         inline constexpr auto Type = "Distortion - Type";
-    };
+    }
     namespace Delay {
         inline constexpr auto Active = "Delay - Active";
         inline constexpr auto Feedback = "Delay - Feedback";
@@ -35,7 +35,7 @@ namespace ParamIDs {
         inline constexpr auto DelayType = "Delay - Delay Type";
         // inline constexpr auto TempoType = "Delay - Tempo Type";
         // inline constexpr auto Division = "Delay - Division";
-    };
+    }
     namespace Filter {
         inline constexpr auto Active = "Filter - Active";
         inline constexpr auto Mix = "Filter - Mix";

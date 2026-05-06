@@ -28,6 +28,7 @@ AudimoAudioProcessor::AudimoAudioProcessor()
     m_bleManager.getReceiver().onMessageReceived = 
         [this](const juce::OSCMessage& message) { onOSCMessageReceived(message); };
 
+    // Link parameter pointers and paramters
     proportionalParamPointers.activeParam = m_treeState.getRawParameterValue(ParamIDs::Proportional::Active);
     proportionalParamPointers.sensorDataTypeParam = m_treeState.getRawParameterValue(ParamIDs::Proportional::SensorDataType);
     proportionalParamPointers.minimumParam = m_treeState.getRawParameterValue(ParamIDs::Proportional::Minimum);
@@ -63,7 +64,7 @@ AudimoAudioProcessor::AudimoAudioProcessor()
     filterParamPointers.slopeTypeParam = m_treeState.getRawParameterValue(ParamIDs::Filter::SlopeType);
     filterParamPointers.passTypeParam = m_treeState.getRawParameterValue(ParamIDs::Filter::PassType);
 
-    // Set up default linked parameters and listen for changes
+    // Set up controller parameters and listen for changes
     m_treeState.state.setProperty(ParamIDs::Linker::Proportional, "none", nullptr);
     m_treeState.state.setProperty(ParamIDs::Linker::Threshold, "none", nullptr);
     m_treeState.state.addListener(this);
@@ -103,7 +104,6 @@ void AudimoAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
     
     bool gotTime = false;
     bool gotProximity = false;
-    // bool gotGesture = false;
     bool gotAccel = false;
     bool gotGyro = false;
     bool gotEuler = false;
@@ -119,11 +119,10 @@ void AudimoAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
         int msgId = -1;
         if (addr == "/audimo/time")        msgId = 0;
         else if (addr == "/audimo/prox")   msgId = 1;
-        // else if (addr == "/audimo/gest")   msgId = 2;
-        else if (addr == "/audimo/accel")  msgId = 3;
-        else if (addr == "/audimo/gyro")   msgId = 4;
-        else if (addr == "/audimo/euler")  msgId = 5;
-        else if (addr == "/audimo/mic")    msgId = 6;
+        else if (addr == "/audimo/accel")  msgId = 2;
+        else if (addr == "/audimo/gyro")   msgId = 3;
+        else if (addr == "/audimo/euler")  msgId = 4;
+        else if (addr == "/audimo/mic")    msgId = 5;
 
         switch (msgId)
         {
@@ -143,16 +142,7 @@ void AudimoAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
                 }
                 break;
 
-            // TODO rethink this
-            case 2: // /audimo/gest
-                // if (message.size() >= 1 && message[0].isInt32())
-                // {
-                //     tmp.gesture = message[0].getInt32();
-                //     gotGesture = true;
-                // }
-                break;
-
-            case 3: // /audimo/accel
+            case 2: // /audimo/accel
                 if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
                 {
                     tmpAx = message[0].getFloat32();
@@ -162,7 +152,7 @@ void AudimoAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
                 }
                 break;
 
-            case 4: // /audimo/gyro
+            case 3: // /audimo/gyro
                 if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
                 {
                     tmpGx = message[0].getFloat32();
@@ -172,7 +162,7 @@ void AudimoAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
                 }
                 break;
 
-            case 5: // /audimo/euler
+            case 4: // /audimo/euler
                 if (message.size() >= 3 && message[0].isFloat32() && message[1].isFloat32() && message[2].isFloat32())
                 {
                     tmpEx = message[0].getFloat32();
@@ -182,7 +172,7 @@ void AudimoAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
                 }
                 break;
 
-            case 6: // /audimo/mic
+            case 5: // /audimo/mic
                 if (message.size() >= 1 && message[0].isFloat32())
                 {
                     tmpMicRms = message[0].getFloat32();
@@ -206,6 +196,7 @@ void AudimoAudioProcessor::onOSCBundleReceived(const juce::OSCBundle& bundle)
 
 }
 
+// When notify charactersistic with gest comes in 
 void AudimoAudioProcessor::onOSCMessageReceived(const juce::OSCMessage& message)
 {
     auto addr = message.getAddressPattern().toString();
@@ -223,6 +214,7 @@ juce::AudioProcessorValueTreeState& AudimoAudioProcessor::getTreeState()
     return m_treeState;
 }
 
+// Listens for new controller-parameter links
 void AudimoAudioProcessor::valueTreePropertyChanged(juce::ValueTree& tree, const juce::Identifier& property)
 {
     if (property == juce::Identifier(ParamIDs::Linker::Proportional))
@@ -310,8 +302,6 @@ void AudimoAudioProcessor::changeProgramName (int index, const juce::String& new
 //==============================================================================
 void AudimoAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
@@ -367,6 +357,7 @@ void AudimoAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     juce::dsp::AudioBlock<float> block (buffer);
     juce::dsp::ProcessContextReplacing<float> context (block);
 
+    // update parameters 
     proportionalParams.active = proportionalParamPointers.activeParam->load();
     proportionalParams.sensorDataType = proportionalParamPointers.sensorDataTypeParam->load();
     proportionalParams.minimum = proportionalParamPointers.minimumParam->load();

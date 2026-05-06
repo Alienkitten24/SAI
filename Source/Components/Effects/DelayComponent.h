@@ -22,7 +22,6 @@ private:
     KnobComponent mixKnob { "Mix", treeState, ParamIDs::Delay::Mix };
 
     ComboBoxComponent delayTypeComboBox { treeState, ParamIDs::Delay::DelayType };
-    // ComboBoxComponent tempoTypeComboBox { treeState, ParamIDs::Delay::TempoType };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DelayComponent)
 };

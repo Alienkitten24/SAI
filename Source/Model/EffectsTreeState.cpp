@@ -7,9 +7,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
 
 
     // maybe use emplace_back over push_back ? need to research
-    // TODO figure out a good Db range (maybe use normalizablerange<> ?)
-    // https://github.com/JanWilczek/juce-webview-tutorial/blob/main/plugin/source/PluginProcessor.cpp line 211
-    // TODO apparently you don't have to addChild, can just init it in the group line
     auto gainGroup = std::make_unique<juce::AudioProcessorParameterGroup>(
         GroupIDs::Gain, "Gain", "|"
     );
@@ -135,6 +132,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     params.push_back(std::move(distortionGroup));
     params.push_back(std::move(delayGroup));
     params.push_back(std::move(filterGroup));
+
     params.push_back(std::move(proportionalGroup));
     params.push_back(std::move(thresholdGroup));
 

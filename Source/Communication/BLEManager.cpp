@@ -14,8 +14,7 @@ BLEManager::~BLEManager()
 
 void BLEManager::start()
 {
-    // exchange puts new value (true) and returns old value
-    // so if already running, exchange returns true, so we can exit
+    // exchange puts new value (true) and returns old value so if already running, exchange returns true, so we can exit
     if (m_running.exchange(true)) {
         return;
     }
@@ -69,7 +68,6 @@ void BLEManager::runLoop()
             // TODO this cast does nothing, prolly just make the ByteArray a vector<uint8_t> 
             std::vector<uint8_t> msg = std::vector<uint8_t>(raw.begin(), raw.end());
             m_bridge.forward(msg);
-            // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
         catch (const std::exception &e) {
             std::cerr << "Error in BLE Loop: " << e.what() << std::endl;
@@ -82,9 +80,8 @@ void BLEManager::runLoop()
 void BLEManager::onNotify(const std::vector<uint8_t>& msg)
 {
     if (m_running) {
-        // try
+        // potentially need a try catch
         m_bridge.forward(msg);
-        // catch maybe?
     }
 }
 

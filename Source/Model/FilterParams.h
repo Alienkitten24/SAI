@@ -24,12 +24,12 @@ struct FilterParamPointers {
 };
 
 enum SlopeType {
-    DB12 = 0,
-    DB24 = 1
+    DB12,
+    DB24
 };
 
 enum PassType {
-    LOWPASS = 0,
-    HIGHPASS = 1,
-    BANDPASS = 2
+    LOWPASS,
+    HIGHPASS,
+    BANDPASS
 };

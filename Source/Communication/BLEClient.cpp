@@ -14,9 +14,8 @@ BLEClient::BLEClient()
 
 BLEClient::~BLEClient()
 {
-    // try {
-        m_peripheral.disconnect();
-    // } catch (...) {}
+    // TODO wrap in try catch 
+    m_peripheral.disconnect();
 }
 
 void BLEClient::start()
@@ -146,7 +145,6 @@ SimpleBLE::ByteArray BLEClient::fetch()
 
 void BLEClient::subscribe()
 {
-    // m_peripheral.notify(m_uuid.first, m_uuid.second, onNotify)
     m_peripheral.notify(
         m_uuid.first,
         m_uuid.second,

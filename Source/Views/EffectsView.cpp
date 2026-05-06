@@ -9,9 +9,6 @@ EffectsView::EffectsView (AudimoAudioProcessor& p)
     proportionalControllerComponent (p.getTreeState()),
     thresholdControllerComponent    (p.getTreeState())
 {   
-    // addAndMakeVisible(label);
-    // label.setText("Effects view", juce::dontSendNotification);
-
     addAndMakeVisible(gainComponent);
     addAndMakeVisible(distortionComponent);
     addAndMakeVisible(delayComponent);
@@ -34,6 +31,7 @@ void EffectsView::resized()
 {
     auto bounds = getLocalBounds();
     
+    // arrange into 2 columns, with all the effects in one and controllers in the other
     auto columnWidth = bounds.getWidth() / 2;
     auto leftColumn = bounds.removeFromLeft(columnWidth);
     auto rightColumn = bounds;

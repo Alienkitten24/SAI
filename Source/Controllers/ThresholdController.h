@@ -34,8 +34,5 @@ private:
     float threshold = 0.0f;
     float modifier = 0.0f;
 
-    // float valueBeforeJump = 0.0f;
-    // bool isAboveThreshold = false; 
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ThresholdController)
 };

@@ -22,15 +22,12 @@ public:
 private:
     AudimoAudioProcessor& audioProcessor;
 
-    juce::Label label;
-
     GainComponent gainComponent;
     DistortionComponent distortionComponent;
     DelayComponent delayComponent;
     FilterComponent filterComponent;
     ProportionalControllerComponent proportionalControllerComponent;
     ThresholdControllerComponent thresholdControllerComponent;
-
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EffectsView)
 };

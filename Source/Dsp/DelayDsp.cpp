@@ -26,7 +26,7 @@ void DelayDsp::prepare(const juce::dsp::ProcessSpec& spec)
     lastDelayType = DelayType::MONO;
     
     dryWet.prepare(spec);
-    dryWet.setMixingRule(juce::dsp::DryWetMixingRule::linear); // idk
+    dryWet.setMixingRule(juce::dsp::DryWetMixingRule::linear); 
 }
 
 void DelayDsp::process(juce::dsp::ProcessContextReplacing<float>& context)

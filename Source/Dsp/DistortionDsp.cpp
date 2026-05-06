@@ -33,16 +33,11 @@ void DistortionDsp::prepare(const juce::dsp::ProcessSpec& spec)
     setWaveshaper(DistortionType::SOFTCLIP);
 
     dryWet.prepare(spec);
-    dryWet.setMixingRule(juce::dsp::DryWetMixingRule::linear); // idk
-
-    // driveSmoothed.reset (osSpec.sampleRate, 0.02);
-    // outputSmoothed.reset (spec.sampleRate, 0.02);
-    // mixSmoothed.reset (spec.sampleRate, 0.02);
+    dryWet.setMixingRule(juce::dsp::DryWetMixingRule::linear);
 }
 
 void DistortionDsp::process(const juce::dsp::ProcessContextReplacing<float>& context)
 {
-    // TODO since this is replacing dont need two blocks... maybe
     juce::dsp::AudioBlock inputBlock  = context.getInputBlock();
     juce::dsp::AudioBlock outputBlock = context.getOutputBlock();
 
@@ -85,9 +80,8 @@ void DistortionDsp::setWaveshaper(int type)
     switch (type) {
         case DistortionType::SOFTCLIP :
             waveshaper.functionToUse = [] (float x) { 
+                // TODO consider using an approximation formula or juce::dsp::FastMathApproximations::tanh
                 return std::tanh(x); 
-                // TODO consider using an approximation formula
-                // or juce::dsp::FastMathApproximations::tanh
             };
             break;
         case DistortionType::HARDCLIP :

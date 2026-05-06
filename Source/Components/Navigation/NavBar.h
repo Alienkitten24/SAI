@@ -3,6 +3,12 @@
 #include <JuceHeader.h>
 #include <functional>
 
+enum ScreenIDs {
+    EFFECTS,
+    MATRIX,
+    ADVANCED
+};
+
 class NavBar : public juce::Component
 {
 public:

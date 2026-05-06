@@ -68,7 +68,7 @@ void AdvancedView::resized()
                          labelH - 4);
 
     // The subwindow should be sized independently of the grid. 
-    // Here, we center it and give it a fixed size (e.g., 300x200 pixels).
+    // Here, we center it and give it a fixed size 
     const int subW = 300;
     const int subH = 200;
 
@@ -87,7 +87,7 @@ void AdvancedView::timerCallback()
   // Copy data under lock then update labels on GUI thread
   SensorDataSnapshot copy = audioProcessor.getSensorDataCopy();
 
-  // Update label texts (match order in sensorData)
+  // Update label texts 
   if (rawDataLabels.size() == 13) {
     rawDataLabels[0].setText ("time: " + juce::String (copy.time, 3), juce::dontSendNotification);
     rawDataLabels[1].setText ("proximity: " + juce::String (copy.proximity), juce::dontSendNotification);

@@ -23,8 +23,9 @@ void BLESettingsComponent::resized()
 
 void BLESettingsComponent::visibilityChanged()
 {
-    if (isVisible())
+    if (isVisible()) {
         label.setText("Scanning for Bluetooth Devices...", juce::dontSendNotification);
+    }
 }
 
 void BLESettingsComponent::setErrorMessage(const juce::String& msg)

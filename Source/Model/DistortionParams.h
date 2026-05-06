@@ -24,7 +24,7 @@ struct DistortionParamPointers {
 };
 
 enum DistortionType {
-    SOFTCLIP = 0,
-    HARDCLIP = 1,
-    BITCRUSH = 2
+    SOFTCLIP,
+    HARDCLIP,
+    BITCRUSH
 };

@@ -18,7 +18,6 @@ void DelayComponent::createWidgets()
     addAndMakeVisible(feedbackKnob);
     addAndMakeVisible(mixKnob);
     addAndMakeVisible(delayTypeComboBox);
-    // addAndMakeVisible(tempoTypeComboBox);
 }
 
 void DelayComponent::layoutMainContent(juce::Rectangle<int> bounds)
@@ -29,5 +28,4 @@ void DelayComponent::layoutMainContent(juce::Rectangle<int> bounds)
     feedbackKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
     mixKnob.setBounds(bounds.removeFromLeft(itemWidth).reduced(5));
     delayTypeComboBox.setBounds(bounds.reduced(5));
-    // tempoTypeComboBox.setBounds(bounds.reduced(5));
 }

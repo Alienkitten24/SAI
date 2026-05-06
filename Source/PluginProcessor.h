@@ -92,7 +92,6 @@ private:
     SensorData m_sensorData;
 
     //==============================================================================
-    // juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     // TODO make treeState take an undo manager ?
     // research if defining { } is better to do in .h or .cpp 
     juce::AudioProcessorValueTreeState m_treeState {

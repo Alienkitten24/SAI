@@ -31,7 +31,7 @@ void TitleBarComponent::resized()
     
     activeButton.setBounds(bounds.removeFromLeft(50).reduced(5));
     
-    // TODO prolly wanna remove the hardcoded numbers
+    // TODO probably should remove the hardcoded numbers
     auto labelWidth = 200;
     auto labelHeight = 40;
     label.setBounds(

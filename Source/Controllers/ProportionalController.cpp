@@ -143,7 +143,6 @@ void ProportionalController::setSensorDataType(int type)
         case SensorDataType::MICRMS:
             sensorDataType = SensorDataType::MICRMS;
             break;
-
+        // default
     }
-
 }
