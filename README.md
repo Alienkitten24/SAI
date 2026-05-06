@@ -23,9 +23,9 @@ Download and install JUCE [here](https://juce.com/download), or build with CMake
 Clone the SimpleBLE. Install using CMake. 
 
 ```bash
-cmake -S <path-to-simpleble> -B <path-to-build>
-cmake --build <path-to-build>
-cmake --install <path-to-build
+cmake -S [path-to-simpleble] -B [path-to-build]
+cmake --build [path-to-build]
+cmake --install [path-to-build]
 ```
 
 
@@ -41,8 +41,8 @@ cmake --install <path-to-build
 To build the plugin:
 
 ```bash
-cmake -S <path-to-audimo> -B <path-to-build>
-cmake --build <path-to-build> --config Release
+cmake -S [path-to-audimo] -B [path-to-build]
+cmake --build [path-to-build] --config Release
 ```
 
 Example building on Windows 11:
