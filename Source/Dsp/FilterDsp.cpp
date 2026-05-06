@@ -16,6 +16,9 @@ void FilterDsp::prepare(const juce::dsp::ProcessSpec& spec)
     iirFilter2.prepare(spec);
     *iirFilter1.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, 1000.0f, 0.1f);
     *iirFilter2.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, 1000.0f, 0.1f);
+
+    dryWet.prepare(spec);
+    dryWet.setMixingRule(juce::dsp::DryWetMixingRule::linear);
 }
 
 void FilterDsp::process(const juce::dsp::ProcessContextReplacing<float>& context)

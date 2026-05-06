@@ -23,6 +23,7 @@ private:
 
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
 
+    // TODO use juce::smoothedvalues instead to prevent zipper noise
     juce::dsp::Gain<float> driveGain;
     juce::dsp::Gain<float> postGain;
 
