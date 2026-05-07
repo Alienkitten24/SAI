@@ -1,6 +1,11 @@
 """
-saves CSVs, live plt plotting, sends UDP to plugdata
-"""
+Real-Time Sensor Recording and Streaming
+
+- Establishes BLE communication with Audimo device 
+- Records template gesture for two seconds, then proceeds with data acquisition
+- Generates 2 CSV datasets with sensor data 
+- UDP streaming to PlugData 
+- Template and gesture recording for DTW-based analysis"""
 
 import asyncio
 from bleak import BleakScanner, BleakClient
