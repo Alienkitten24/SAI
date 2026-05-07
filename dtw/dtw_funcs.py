@@ -1,3 +1,15 @@
+"""DTW Signal Processing Functions
+
+This module contains utility functions for:
+- Signal normalization
+- Template extraction
+- Dynamic Time Warping (DTW) distance computation
+- Signal smoothing
+- Detection range extraction
+- Overlap merging
+
+Used for time-series template matching and event detection."""
+
 import numpy as np
 from dtw import dtw
 from sklearn.preprocessing import StandardScaler
